@@ -36,7 +36,7 @@ or
 ```
 
 # Thanks to
-- https://github.com/StrafeTx (Basically spoonfed me how to get the offsets so I could learn reverse engineering better)
-- https://github.com/StrafeUltra (Helping me figure out a bunch of issues I was having with the hellscape called ptrace)
+- https://github.com/StrafeTx (Basically spoonfed me how to get the offsets so I could learn reverse engineering better, making the original cheat for windows which has more features but is private which I used as reference)
+- https://github.com/StrafeUltra (Helping me figure out a bunch of issues I was having with the hellscape called ptrace and more)
 
 
