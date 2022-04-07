@@ -1,7 +1,5 @@
 ## A generic CLI Left 4 Dead 2 Cheat for linux
 
-Made to learn Linux game cheating better and to improve my C skills in general
-
 # Tested on
 - [gentoo (amd64)](https://www.gentoo.org/)
 
