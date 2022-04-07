@@ -2,6 +2,9 @@
 
 Made to learn Linux game cheating better and to improve my C skills in general
 
+# Tested on
+- gentoo linux
+
 # Requirements
 - Make
 - gcc (or any C compiler)
