@@ -3,7 +3,7 @@
 Made to learn Linux game cheating better and to improve my C skills in general
 
 # Tested on
-- gentoo linux
+- [gentoo](https://www.gentoo.org/)
 
 # Requirements
 - Make
