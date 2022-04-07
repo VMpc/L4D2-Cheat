@@ -34,3 +34,9 @@ make run
 or 
 ./L4D2Cheat
 ```
+
+# Thanks to
+- https://github.com/StrafeTx (Basically spoonfed me how to get the offsets so I could learn reverse engineering better)
+- https://github.com/StrafeUltra (Helping me figure out a bunch of issues I was having with the hellscape called ptrace)
+
+
