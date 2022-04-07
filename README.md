@@ -22,13 +22,13 @@ Made to learn Linux game cheating better and to improve my C skills in general
 
 # Build 
 ```
-git clone github.com/Not-Cyrus/L4D2-Cheat
+git clone https://github.com/Not-Cyrus/L4D2-Cheat
 cd L4D2-Cheat
 make
 ```
 # Run
 ```
-git clone github.com/Not-Cyrus/L4D2-Cheat
+git clone https://github.com/Not-Cyrus/L4D2-Cheat
 cd L4D2-Cheat
 make run 
 or 
