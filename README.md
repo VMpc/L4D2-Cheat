@@ -1,7 +1,9 @@
 ## A generic CLI Left 4 Dead 2 Cheat for linux
 
 # Tested on
+- [fedora (amd64)](https://getfedora.org/)
 - [gentoo (amd64)](https://www.gentoo.org/)
+- [Linux Mint(amd64)](https://linuxmint.com/)
 
 # How to use
 - Commands: glow on/off, noboom on/off
@@ -10,7 +12,7 @@
 
 # Requirements
 - Make
-- gcc (or any C compiler)
+- gcc (multilib headers)
 
 # Features
 
