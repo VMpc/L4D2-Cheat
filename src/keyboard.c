@@ -23,7 +23,7 @@
 int fd, uinputfd;
 struct Key KeyList[MAX_KEY_SIZE];
 
-/* DFrees the virtual keyboard */
+/* Frees the virtual keyboard */
 void closeKeyboard(void)
 {
   ioctl(uinputfd, UI_DEV_DESTROY);
@@ -65,7 +65,6 @@ void openKeyboard(void)
 
   fclose(f);
 }
-
 
 /* Creates a virtual device */
 /* @TODO Support Alpine Linux */
