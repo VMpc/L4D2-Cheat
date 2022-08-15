@@ -31,39 +31,34 @@ void closeKeyboard(void)
 }
 
 /* Finds a /dev/input device */
-void openKeyboard(void)
-{
-  char *event, eventName[9], fileName[25], lineBuf[40];
+void openKeyboard(void) {
   FILE *f;
-  int ePtr = 0, ptr = 0;
+  char eventName[9], fileName[25], lineBuf[1024];
 
   if ((f = fopen("/proc/bus/input/devices", "r")) == NULL)
     exitProgram("(openKeyboard) could not open /proc/bus/input/devices", 1);
 
-  while (fgets(lineBuf, sizeof(lineBuf), f))
-  {
-    if (!strstr(lineBuf, "sysrq kbd") || strstr(lineBuf, "mouse"))
-      continue;
+  while (fgets(lineBuf, sizeof(lineBuf), f)) {
+    char *ptr;
+    char *ptr2;
 
-    if ((event = strstr(lineBuf, "event")) == NULL)
-      continue;
-
-    ptr = (event - lineBuf) - 1;
-    while (isdigit(lineBuf[ptr]) == 0 && ptr++)
-    {
-      eventName[ePtr] = lineBuf[ptr];
-      ePtr++;
+    if ((ptr = strstr(lineBuf, "Handlers="))) {
+      ptr += strlen("Handlers=");
+      if ((ptr = strstr(ptr, "event"))) {
+        if ((ptr2 = strchr(ptr, ' ')))
+          *ptr2 = '\0';
+        sprintf(eventName, "%s", ptr);
+      }
     }
-    eventName[ePtr] = '\0';
-
-    break;
+    if (strstr(lineBuf, "EV=120013"))
+      break;
   }
+
+  fclose(f);
 
   sprintf(fileName, "/dev/input/%s", eventName);
   if ((fd = open(fileName, O_RDONLY | O_NONBLOCK)) == -1)
     exitProgram("(openKeyboard) could not open the input device", 1);
-
-  fclose(f);
 }
 
 /* Creates a virtual device */
