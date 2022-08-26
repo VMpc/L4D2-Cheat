@@ -22,13 +22,13 @@
 
 # Build 
 ```
-git clone https://github.com/Fox-Cult/L4D2-Cheat
+git clone https://github.com/VMpc/L4D2-Cheat
 cd L4D2-Cheat
 make
 ```
 # Run
 ```
-git clone https://github.com/Fox-Cult/L4D2-Cheat
+git clone https://github.com/VMpc/L4D2-Cheat
 cd L4D2-Cheat
 make run 
 or 
