@@ -1,3 +1,9 @@
+/* keyboard.h
+ *
+ * Licensed under GPL version 3 or later.
+ * See LICENSE for copyright information.
+ */
+
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
@@ -22,4 +28,4 @@ void manageInput(void);
 
 void sendInput(int);
 
-#endif
+#endif /* _KEYBOARD_H */

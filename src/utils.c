@@ -1,24 +1,46 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+/* utils.c
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- *
+ * Licensed under GPL version 3 or later.
+ * See LICENSE for copyright information.
  */
 
 #define _GNU_SOURCE
-#include "includes.h"
+
 #include "utils.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <string.h>
+
+#include <dirent.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include <pwd.h>
+#include <linux/uinput.h>
+#include <sys/ptrace.h>
+#include <sys/uio.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+void die(const char *fmt, ...)
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  vfprintf(stderr, fmt, ap);
+  va_end(ap);
+
+  if (fmt[0] && fmt[strlen(fmt)-1] == ':') {
+    fputc(' ', stderr);
+    perror(NULL);
+  } else {
+    fputc('\n', stderr);
+  }
+
+  exit(1);
+}
 
 /* Check if the user has the required permissions to run this program */
 void checkAllowed(void)
@@ -32,21 +54,21 @@ void checkAllowed(void)
     return;
 
   if ((f = fopen("/proc/sys/kernel/yama/ptrace_scope", "r")) == NULL)
-    exitProgram("(checkAllowed) could not open the prace_scope file", 1);
+    die("(checkAllowed) could not open the prace_scope file");
 
   if (fgetc(f) >= 49 && fgetc(f) <= 51)
-    exitProgram("You need to run this program as root", 1);
+    die("You need to run this program as root");
   fclose(f);
 
   if ((f = fopen("/etc/group", "r")) == NULL)
-    exitProgram("(checkAllowed) could not open /etc/group", 1);
+    die("(checkAllowed) could not open /etc/group");
 
   if ((pw = getpwuid(uid)) == NULL)
-    exitProgram("pwuid error: ", 1);
+    die("pwuid error: ");
 
   while (fgets(line, sizeof(line), f))
     if (!(strstr(line, "input") && strstr(line, pw->pw_name)))
-      exitProgram("You need to run this program as root", 1);
+      die("You need to run this program as root");
 
   free(pw);
   fclose(f);
@@ -61,12 +83,6 @@ void doSleep(int ms)
   select(0, NULL, NULL, NULL, &tv);
 }
 
-void exitProgram(const char *buf, const int code)
-{
-  printf("%s\n", buf);
-  exit(code);
-}
-
 /* find the procid of a running process */
 pid_t findPid(char *name)
 {
@@ -77,7 +93,7 @@ pid_t findPid(char *name)
   pid_t pid;
 
   if ((dir = opendir("/proc")) == NULL)
-    exitProgram("Could not open /proc directory", 1);
+    die("Could not open /proc directory");
 
   while ((de = readdir(dir)) != NULL)
   {
@@ -186,7 +202,7 @@ char pokeAddr(pid_t pid, long addr, char *buf, int size)
 }
 
 /* Safe read func */
-char readAddr(pid_t pid, int32_t addr, void *buf, ssize_t size)
+char readAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size)
 {
   struct iovec local[1];
   struct iovec remote[1];
@@ -200,7 +216,7 @@ char readAddr(pid_t pid, int32_t addr, void *buf, ssize_t size)
 }
 
 /* Safe write func, does not bypass page protection */
-char writeAddr(pid_t pid, int32_t addr, void *buf, ssize_t size)
+char writeAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size)
 {
   struct iovec local[1];
   struct iovec remote[1];

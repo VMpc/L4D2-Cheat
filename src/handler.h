@@ -1,5 +1,13 @@
+/* hander.h
+ *
+ * Licensed under GPL version 3 or later.
+ * See LICENSE for copyright information.
+ */
+
 #ifndef _HANDLER_H
 #define _HANDLER_H
+
+#include "game.h"
 
 #define MAX_COMMANDS 50
 
@@ -16,4 +24,4 @@ typedef struct Cmd
   char *(*func)(Game *, char **);
 } Command;
 
-#endif
+#endif /* _HANDLER_H */

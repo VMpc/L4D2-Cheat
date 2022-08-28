@@ -1,41 +1,55 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+/* main.c
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- *
+ * Licensed under GPL version 3 or later.
+ * See LICENSE for copyright information.
  */
 
 #include "commands.h"
 #include "game.h"
 #include "handler.h"
 #include "keyboard.h"
-#include "main.h"
 #include "utils.h"
 
-Game game;
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <pthread.h>
+#include <linux/uinput.h>
 
+static void initCommands(void);
+static void *mainThread(void *);
+static void sigTrap(int);
+
+static Game game;
+
+int main(void)
+{
+  pthread_t threadID;
+
+  signal(SIGINT, sigTrap);
+
+  checkAllowed();
+
+  openGame(&game, "hl2_linux");
+
+  pthread_create(&threadID, NULL, mainThread, NULL);
+
+  initCommands();
+
+  return 0;
+}
 
 /* Create our commands and handler */
-void initCommands(void)
+static void initCommands(void)
 {
+  char *line = NULL;
+
   addCommand("glow", 1, toggleEsp);
   addCommand("noboom", 1, toggleNoBoom);
 
   while (1)
   {
-	char *line = NULL;
-
     printf("> ");
     line = getLine(line);
     splitArguments(&game, line);
@@ -45,10 +59,10 @@ void initCommands(void)
 }
 
 /* Main cheat thread */
-void *mainThread(void *_)
+static void *mainThread(void *_)
 {
   int playerFlag;
-  (void)_;
+  (void)_; /* ignoring extra thread arg */
 
   while (1)
   {
@@ -64,38 +78,23 @@ void *mainThread(void *_)
       toggleFlag(&game.doBhop, 0, "Bhop disabled");
 
     if (!game.doBhop)
-		continue;
+      continue;
 
-    readAddr(game.pid, game.Player + Offsets.PlrCrouch,
-		&playerFlag, sizeof(playerFlag));
+    readAddr(game.pid,
+             game.Player + Offsets.PlrCrouch,
+             &playerFlag, sizeof(playerFlag));
 
     if (playerFlag == 131 || playerFlag == 643)
       sendInput(KEY_SPACE);
 
     doSleep(10000);
   }
+  return NULL;
 }
 
 /* Wait for Ctrl + C */
-void sigTrap(int sig)
+static void sigTrap(int sig)
 {
   signal(sig, SIG_IGN);
   closeKeyboard();
-}
-
-int main(void)
-{
-  pthread_t threadID;
-
-  signal(SIGINT, sigTrap);
-
-  checkAllowed();
-
-  openGame(&game, "hl2_linux");
-
-  pthread_create(&threadID, NULL, mainThread, (void *)(NULL));
-
-  initCommands();
-
-  return 0;
 }

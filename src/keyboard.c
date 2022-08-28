@@ -1,26 +1,21 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+/* keyboard.c
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- *
+ * Licensed under GPL version 3 or later.
+ * See LICENSE for copyright information.
  */
 
-#include "includes.h"
 #include "keyboard.h"
 #include "utils.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <linux/uinput.h>
 
-int fd, uinputfd;
+static int fd;
+static int uinputfd;
 struct Key KeyList[MAX_KEY_SIZE];
 
 /* Frees the virtual keyboard */
@@ -36,7 +31,7 @@ void openKeyboard(void) {
   char eventName[9], fileName[25], lineBuf[1024];
 
   if ((f = fopen("/proc/bus/input/devices", "r")) == NULL)
-    exitProgram("(openKeyboard) could not open /proc/bus/input/devices", 1);
+    die("(openKeyboard) could not open /proc/bus/input/devices");
 
   while (fgets(lineBuf, sizeof(lineBuf), f)) {
     char *ptr;
@@ -58,7 +53,7 @@ void openKeyboard(void) {
 
   sprintf(fileName, "/dev/input/%s", eventName);
   if ((fd = open(fileName, O_RDONLY | O_NONBLOCK)) == -1)
-    exitProgram("(openKeyboard) could not open the input device", 1);
+    die("(openKeyboard) could not open the input device");
 }
 
 /* Creates a virtual device */
@@ -68,7 +63,7 @@ void openUinputKeyboard(void)
   struct uinput_setup usetup = {0};
 
   if ((uinputfd = open("/dev/uinput", O_WRONLY | O_NONBLOCK)) == -1)
-    exitProgram("/dev/uninput error", 1);
+    die("/dev/uninput error");
 
   ioctl(uinputfd, UI_SET_EVBIT, EV_KEY);
   ioctl(uinputfd, UI_SET_KEYBIT, KEY_SPACE);

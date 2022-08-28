@@ -1,8 +1,10 @@
-## A generic CLI Left 4 Dead 2 Cheat for linux
+## L4D2-Cheat
+
+A generic command line Left 4 Dead 2 Cheat program for GNU/Linux.
 
 # Tested on
-- [fedora (amd64)](https://getfedora.org/)
-- [gentoo (amd64)](https://www.gentoo.org/)
+- [Fedora (amd64)](https://getfedora.org/)
+- [Gentoo (amd64)](https://www.gentoo.org/)
 - [Linux Mint(amd64)](https://linuxmint.com/)
 
 # How to use
@@ -10,9 +12,7 @@
 - Up/Down arrow to toggle on/off bhop
 - Bhop normally but don't press space & hold LCTRL
 
-# Requirements
-- Make
-- gcc (multilib headers)
+You'll need to be root to run L4D2-Cheat successfully.
 
 # Features
 
@@ -20,23 +20,26 @@
 - Glowhack
 - Removing boomer effects
 
-# Build 
+# Requirements
+- GCC - see config.mk if you want to change this
+- Make
+- Sudo
+
+# Building & Running it
+
 ```
 git clone https://github.com/VMpc/L4D2-Cheat
 cd L4D2-Cheat
-make
-```
-# Run
-```
-git clone https://github.com/VMpc/L4D2-Cheat
-cd L4D2-Cheat
-make run 
-or 
-./L4D2Cheat
+make all
+# The game should be launched...
+sudo ./L4D2Cheat
 ```
 
 # Thanks to
-- https://github.com/StrafeTx (Basically spoonfed me how to get the offsets so I could learn reverse engineering better, making the original cheat for windows which has more features but is private which I used as reference)
-- https://github.com/StrafeUltra (Helping me figure out a bunch of issues I was having with the hellscape called ptrace and more)
+- https://github.com/StrafeTx (Helped with offsets)
+- https://github.com/StrafeUltra (Moral support / Helped figure out the hellscape of ptrace)
+- URLNOTFOUND (A federal agent / Hated my code so much there was a patch file sent to fix it)
 
-
+# License
+L4D2-Cheat is licensed under GPL version 3, or later.
+See LICENSE for copyright information.

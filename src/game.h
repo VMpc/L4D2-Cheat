@@ -1,7 +1,13 @@
+/* game.h
+ *
+ * Licensed under GPL version 3 or later.
+ * See LICENSE for copyright information.
+ */
+
 #ifndef _GAME_H
 #define _GAME_H
-#include "includes.h"
 
+#include <sys/types.h>
 
 typedef struct
 {
@@ -20,6 +26,7 @@ struct OffsetStruct
 
   int PlrCrouch;
 };
+
 extern struct OffsetStruct Offsets;
 
 void openGame(Game *, char *);
@@ -28,4 +35,4 @@ char playerFound(Game *);
 
 void toggleFlag(char *, char, char *);
 
-#endif
+#endif /* _GAME_H */

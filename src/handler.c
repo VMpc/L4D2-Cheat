@@ -1,24 +1,15 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+/* keyboard.c
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- *
+ * Licensed under GPL version 3 or later.
+ * See LICENSE for copyright information.
  */
 
-#include "includes.h"
-#include "game.h"
 #include "handler.h"
+#include "game.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 int cmdAmount = -1;
 struct Cmd Commands[MAX_COMMANDS];
@@ -56,7 +47,8 @@ char *executeCommand(Game *game, char **args, int spaces)
 void splitArguments(Game *game, char *str)
 {
 
-  char **args = NULL, *ptr = strtok(str, " ");
+  char **args = NULL;
+  char *ptr = strtok(str, " ");
   int spaces = 0;
 
   while (ptr)

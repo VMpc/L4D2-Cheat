@@ -1,7 +1,15 @@
+/* utils.h
+ *
+ * Licensed under GPL version 3 or later.
+ * See LICENSE for copyright information.
+ */
+
 #ifndef _UTILS_H
 #define _UTILS_H
 
 #define NOP (char)0x90
+
+#include <sys/types.h>
 
 /* Structs */
 struct user_regs_struct
@@ -31,12 +39,12 @@ typedef union PokeUnion
   char chars[sizeof(long)];
 } pokeData;
 
-/* Funcs */
+/* Functions */
 void checkAllowed(void);
 
 void doSleep(int);
 
-void exitProgram(const char *, const int);
+void die(const char *, ...);
 
 pid_t findPid(char *);
 
@@ -46,8 +54,8 @@ int32_t moduleAddr(pid_t, char *);
 
 char pokeAddr(pid_t, long, char *, int);
 
-char readAddr(pid_t, int32_t, void *, ssize_t);
+char readAddr(pid_t, ssize_t, void *, ssize_t);
 
-char writeAddr(pid_t, int32_t, void *, ssize_t);
+char writeAddr(pid_t, ssize_t, void *, ssize_t);
 
-#endif
+#endif /* _UTILS_H */
