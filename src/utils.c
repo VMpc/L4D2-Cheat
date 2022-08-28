@@ -2,7 +2,7 @@
  *
  * Licensed under GPL version 3 or later.
  * See LICENSE for copyright information.
- */
+*/
 
 #define _GNU_SOURCE
 

@@ -2,7 +2,7 @@
  *
  * Licensed under GPL version 3 or later.
  * See LICENSE for copyright information.
- */
+*/
 
 #ifndef _UTILS_H
 #define _UTILS_H

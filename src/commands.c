@@ -2,13 +2,14 @@
  *
  * Licensed under GPL version 3 or later.
  * See LICENSE for copyright information.
- */
+*/
 
 #include "../include/commands.h"
 #include "../include/game.h"
 #include "../include/utils.h"
 
 #include <string.h>
+
 
 char *toggleEsp(Game *game, char **args)
 {
