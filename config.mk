@@ -6,7 +6,7 @@
 CC = cc
 
 TARGET  = L4D2Cheat
-VERSION = 0.0.1
+VERSION = $(shell head -n 1 VERSION)
 
 LDFLAGS = -pthread
 CFLAGS  = -ansi \
@@ -17,7 +17,8 @@ CFLAGS  = -ansi \
           -Wno-deprecated-declarations \
           -Wmissing-prototypes \
           -Wold-style-definition \
-          -DVERSION=$(VERSION)
+          -Iinclude \
+          -DVERSION=\"$(VERSION)\"
 
 SRC = src/commands.c src/game.c src/handler.c src/keyboard.c src/main.c src/utils.c
 OBJ = $(SRC:.c=.o)

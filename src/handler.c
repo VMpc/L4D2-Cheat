@@ -4,8 +4,8 @@
  * See LICENSE for copyright information.
  */
 
-#include "handler.h"
-#include "game.h"
+#include "../include/handler.h"
+#include "../include/game.h"
 
 #include <stdio.h>
 #include <stdlib.h>

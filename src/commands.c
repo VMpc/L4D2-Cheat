@@ -4,9 +4,9 @@
  * See LICENSE for copyright information.
  */
 
-#include "commands.h"
-#include "game.h"
-#include "utils.h"
+#include "../include/commands.h"
+#include "../include/game.h"
+#include "../include/utils.h"
 
 #include <string.h>
 

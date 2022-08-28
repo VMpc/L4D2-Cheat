@@ -4,8 +4,9 @@
  * See LICENSE for copyright information.
  */
 
-#include "keyboard.h"
-#include "utils.h"
+#include "../include/keyboard.h"
+#include "../include/utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>

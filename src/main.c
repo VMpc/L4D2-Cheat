@@ -4,18 +4,23 @@
  * See LICENSE for copyright information.
  */
 
-#include "commands.h"
-#include "game.h"
-#include "handler.h"
-#include "keyboard.h"
-#include "utils.h"
+#include "../include/commands.h"
+#include "../include/game.h"
+#include "../include/handler.h"
+#include "../include/keyboard.h"
+#include "../include/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
+#include <string.h>
 #include <signal.h>
 #include <pthread.h>
+#include <sys/types.h>
 #include <linux/uinput.h>
+
+#ifndef VERSION
+#  define VERSION "No version provided at compile time"
+#endif
 
 static void initCommands(void);
 static void *mainThread(void *);
@@ -23,9 +28,20 @@ static void sigTrap(int);
 
 static Game game;
 
-int main(void)
+int main(int argc, char **argv)
 {
   pthread_t threadID;
+
+  if (argc == 2 && strcmp(argv[1], "-v") == 0)
+  {
+    printf("L4D2 Cheat %s\n", VERSION);
+    return 0;
+  }
+  else if (argc != 1)
+  {
+    fprintf(stderr, "%s: [-v]\n", argv[0]);
+    return 1;
+  }
 
   signal(SIGINT, sigTrap);
 
