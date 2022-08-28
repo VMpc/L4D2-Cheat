@@ -5,7 +5,7 @@ A generic command line Left 4 Dead 2 Cheat program for GNU/Linux.
 # Tested on
 - [Fedora (amd64)](https://getfedora.org/)
 - [Gentoo (amd64)](https://www.gentoo.org/)
-- [Linux Mint(amd64)](https://linuxmint.com/)
+- [Mint (amd64)](https://linuxmint.com/)
 
 # How to use
 - Commands: glow on/off, noboom on/off
@@ -20,7 +20,7 @@ You'll need to be root to run L4D2-Cheat successfully.
 - Glowhack
 - Removing boomer effects
 
-# Requirements
+# Requirements3
 - GCC - see config.mk if you want to change this
 - Make
 - Sudo
