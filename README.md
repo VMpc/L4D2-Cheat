@@ -20,10 +20,10 @@ You'll need to be root to run L4D2-Cheat successfully.
 - Glowhack
 - Removing boomer effects
 
-# Requirements3
+# Requirements
 - GCC - see config.mk if you want to change this
 - Make
-- Sudo
+- Sudo (Or anything that allows you to run programs as root)
 
 # Building & Running it
 
