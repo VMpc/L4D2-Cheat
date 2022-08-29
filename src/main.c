@@ -86,7 +86,7 @@ static void *mainThread(void *_) {
     if (playerFlag == 131 || playerFlag == 643)
       sendInput(KEY_SPACE);
 
-    doSleep(10000);
+    doSleep(100);
   }
 
   return 0;

@@ -10,10 +10,9 @@
 #define MAX_KEY_SIZE 144
 
 /* Structs */
-typedef struct Key
-{
-    char exists;
-    char Value;
+typedef struct Key {
+  char exists;
+  char Value;
 } KeyS;
 extern struct Key KeyList[MAX_KEY_SIZE];
 
