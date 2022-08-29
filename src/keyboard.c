@@ -23,6 +23,7 @@ struct Key KeyList[MAX_KEY_SIZE];
 void closeKeyboard(void) {
   ioctl(uinputfd, UI_DEV_DESTROY);
   close(uinputfd);
+  close(fd);
 }
 
 /* Finds a /dev/input device */

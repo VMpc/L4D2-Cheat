@@ -72,10 +72,10 @@ static void *mainThread(void *_) {
       continue;
 
     if (KeyList[KEY_UP].Value == 1 && !game.doBhop)
-      toggleFlag(&game.doBhop, 1, "Bhop enabled");
+      game.doBhop = 1;
 
-    if (KeyList[KEY_DOWN].Value == 1 && game.doBhop)
-      toggleFlag(&game.doBhop, 0, "Bhop disabled");
+    else if (KeyList[KEY_DOWN].Value == 1 && game.doBhop)
+      game.doBhop = 0;
 
     if (!game.doBhop)
       continue;

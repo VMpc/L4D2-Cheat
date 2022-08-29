@@ -32,15 +32,6 @@ char playerFound(Game *game) {
                   &game->Player, sizeof(game->Player));
 }
 
-/*
- * Toggle a cheats flag
- * TODO: Allow ToggleFlag to support any type (Including write to addresses)
- */
-void toggleFlag(char *addr, char toggle, char *printStr) {
-  *addr = toggle;
-  printf("%s\n", printStr);
-}
-
 /* Stores all of our addresses/Offsets */
 struct OffsetStruct Offsets = {
     /* Addrs */

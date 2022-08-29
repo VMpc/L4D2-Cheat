@@ -31,6 +31,4 @@ void openGame(Game *, char *);
 
 char playerFound(Game *);
 
-void toggleFlag(char *, char, char *);
-
 #endif /* _GAME_H */
