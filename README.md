@@ -1,6 +1,6 @@
 ## L4D2-Cheat
 
-A generic command line Left 4 Dead 2 Cheat program for GNU/Linux.
+A generic command line Left 4 Dead 2 Cheat program for Linux.
 
 # Tested on
 - [Fedora (amd64)](https://getfedora.org/)
@@ -15,7 +15,6 @@ A generic command line Left 4 Dead 2 Cheat program for GNU/Linux.
 You'll need to be root to run L4D2-Cheat successfully.
 
 # Features
-
 - Bhop
 - Glowhack
 - Removing boomer effects
@@ -26,7 +25,6 @@ You'll need to be root to run L4D2-Cheat successfully.
 - Sudo (Or anything that allows you to run programs as root)
 
 # Building & Running it
-
 ```
 git clone https://github.com/VMpc/L4D2-Cheat
 cd L4D2-Cheat
