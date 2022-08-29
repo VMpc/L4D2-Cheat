@@ -9,27 +9,6 @@
 
 #include <sys/types.h>
 
-/* Structs */
-struct user_regs_struct {
-  long int ebx;
-  long int ecx;
-  long int edx;
-  long int esi;
-  long int edi;
-  long int ebp;
-  long int eax;
-  long int xds;
-  long int xes;
-  long int xfs;
-  long int xgs;
-  long int orig_eax;
-  long int eip;
-  long int xcs;
-  long int eflags;
-  long int esp;
-  long int xss;
-};
-
 typedef union PokeUnion {
   long val;
   char chars[sizeof(long)];

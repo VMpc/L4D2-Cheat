@@ -36,7 +36,7 @@ int main(void) {
 
   printf("Version (%s) of the cheat has loaded\n", VERSION);
   openGame(&game, "hl2_linux");
-  
+
   pthread_create(&threadID, NULL, mainThread, NULL);
   initCommands();
 
