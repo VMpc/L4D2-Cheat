@@ -17,8 +17,7 @@ char *executeCommand(Game *, char **, int);
 
 void splitArguments(Game *, char *);
 
-typedef struct Cmd
-{
+typedef struct Cmd {
   char *name;
   int argCount;
   char *(*func)(Game *, char **);

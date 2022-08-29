@@ -7,21 +7,20 @@
 #include "../include/keyboard.h"
 #include "../include/utils.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <ctype.h>
-#include <string.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <linux/uinput.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 static int fd;
 static int uinputfd;
 struct Key KeyList[MAX_KEY_SIZE];
 
 /* Frees the virtual keyboard */
-void closeKeyboard(void)
-{
+void closeKeyboard(void) {
   ioctl(uinputfd, UI_DEV_DESTROY);
   close(uinputfd);
 }
@@ -59,8 +58,7 @@ void openKeyboard(void) {
 
 /* Creates a virtual device */
 /* @TODO Support Alpine Linux */
-void openUinputKeyboard(void)
-{
+void openUinputKeyboard(void) {
   struct uinput_setup usetup = {0};
 
   if ((uinputfd = open("/dev/uinput", O_WRONLY | O_NONBLOCK)) == -1)
@@ -80,16 +78,14 @@ void openUinputKeyboard(void)
 }
 
 /* Handles KEYPRESS and KEYRELEASE events */
-void manageInput(void)
-{
+void manageInput(void) {
   struct input_event ie;
   int bytes;
 
   if ((bytes = read(fd, &ie, sizeof(ie))) < 1 && ie.type != EV_KEY)
     return;
 
-  if (KeyList[ie.code].exists == 0)
-  {
+  if (KeyList[ie.code].exists == 0) {
     KeyS key;
     key.exists = 1;
     key.Value = ie.value;
@@ -100,10 +96,8 @@ void manageInput(void)
   KeyList[ie.code].Value = ie.value;
 }
 
-
 /* Send a keyboard event with a specified type */
-static void sendEvent(int type, int code, int val)
-{
+static void sendEvent(int type, int code, int val) {
   struct input_event ie;
 
   ie.type = type;
@@ -114,8 +108,7 @@ static void sendEvent(int type, int code, int val)
 }
 
 /* Send then release a key */
-void sendInput(int keyCode)
-{
+void sendInput(int keyCode) {
   sendEvent(EV_KEY, keyCode, 1);
   sendEvent(EV_SYN, SYN_REPORT, 0);
   sendEvent(EV_KEY, keyCode, 0);

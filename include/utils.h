@@ -2,18 +2,15 @@
  *
  * Licensed under GPL version 3 or later.
  * See LICENSE for copyright information.
-*/
+ */
 
 #ifndef _UTILS_H
 #define _UTILS_H
 
-#define NOP (char)0x90
-
 #include <sys/types.h>
 
 /* Structs */
-struct user_regs_struct
-{
+struct user_regs_struct {
   long int ebx;
   long int ecx;
   long int edx;
@@ -33,14 +30,13 @@ struct user_regs_struct
   long int xss;
 };
 
-typedef union PokeUnion
-{
+typedef union PokeUnion {
   long val;
   char chars[sizeof(long)];
 } pokeData;
 
 /* Functions */
-void checkAllowed(void);
+char checkAllowed(void);
 
 void doSleep(int);
 

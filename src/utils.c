@@ -2,37 +2,36 @@
  *
  * Licensed under GPL version 3 or later.
  * See LICENSE for copyright information.
-*/
+ */
 
 #define _GNU_SOURCE
 
 #include "../include/utils.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <dirent.h>
 #include <fcntl.h>
+#include <linux/uinput.h>
 #include <pthread.h>
 #include <pwd.h>
-#include <linux/uinput.h>
 #include <sys/ptrace.h>
 #include <sys/uio.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-void die(const char *fmt, ...)
-{
+void die(const char *fmt, ...) {
   va_list ap;
 
   va_start(ap, fmt);
   vfprintf(stderr, fmt, ap);
   va_end(ap);
 
-  if (fmt[0] && fmt[strlen(fmt)-1] == ':') {
+  if (fmt[0] && fmt[strlen(fmt) - 1] == ':') {
     fputc(' ', stderr);
     perror(NULL);
   } else {
@@ -43,40 +42,15 @@ void die(const char *fmt, ...)
 }
 
 /* Check if the user has the required permissions to run this program */
-void checkAllowed(void)
-{
-  FILE *f;
-  char line[50];
-  struct passwd *pw;
-  uid_t uid;
+char checkAllowed(void) {
+  if (getuid() == 1000)
+    return -1;
 
-  if ((uid = getuid()) == 0)
-    return;
-
-  if ((f = fopen("/proc/sys/kernel/yama/ptrace_scope", "r")) == NULL)
-    die("(checkAllowed) could not open the prace_scope file");
-
-  if (fgetc(f) >= 49 && fgetc(f) <= 51)
-    die("You need to run this program as root");
-  fclose(f);
-
-  if ((f = fopen("/etc/group", "r")) == NULL)
-    die("(checkAllowed) could not open /etc/group");
-
-  if ((pw = getpwuid(uid)) == NULL)
-    die("pwuid error: ");
-
-  while (fgets(line, sizeof(line), f))
-    if (!(strstr(line, "input") && strstr(line, pw->pw_name)))
-      die("You need to run this program as root");
-
-  free(pw);
-  fclose(f);
+  return 0;
 }
 
 /* Sleep in microseconds */
-void doSleep(int ms)
-{
+void doSleep(int ms) {
   struct timeval tv;
   tv.tv_sec = 0;
   tv.tv_usec = ms;
@@ -84,8 +58,7 @@ void doSleep(int ms)
 }
 
 /* find the procid of a running process */
-pid_t findPid(char *name)
-{
+pid_t findPid(char *name) {
   struct dirent *de;
   DIR *dir;
   FILE *f;
@@ -95,8 +68,7 @@ pid_t findPid(char *name)
   if ((dir = opendir("/proc")) == NULL)
     die("Could not open /proc directory");
 
-  while ((de = readdir(dir)) != NULL)
-  {
+  while ((de = readdir(dir)) != NULL) {
     if ((pid = atoi(de->d_name)) == 0)
       continue;
 
@@ -118,17 +90,14 @@ pid_t findPid(char *name)
 }
 
 /* Reads data from stdin until a new line */
-char *getLine(char *line)
-{
+char *getLine(char *line) {
   int c;
   size_t maxSize = 0;
   size_t length = 0;
   char *tempStr = NULL;
 
-  while (((c = getchar()) != '\n') && (c != EOF))
-  {
-    if ((length + 1) >= maxSize)
-    {
+  while (((c = getchar()) != '\n') && (c != EOF)) {
+    if ((length + 1) >= maxSize) {
       maxSize = (maxSize == 0) ? 2 : maxSize * 2;
 
       if ((tempStr = realloc(line, maxSize * sizeof(char))) == NULL)
@@ -152,8 +121,7 @@ char *getLine(char *line)
 }
 
 /* Grabs a the base address of a shared object */
-int32_t moduleAddr(pid_t pid, char *library)
-{
+int32_t moduleAddr(pid_t pid, char *library) {
   char buf[200], libraryName[20], mapFilename[20];
   FILE *f;
 
@@ -164,8 +132,7 @@ int32_t moduleAddr(pid_t pid, char *library)
   if ((f = fopen(mapFilename, "r")) == NULL)
     return 0;
 
-  while (fgets(buf, sizeof(buf), f) != NULL)
-  {
+  while (fgets(buf, sizeof(buf), f) != NULL) {
     if (library && !(strstr(buf, libraryName)))
       continue;
 
@@ -177,16 +144,14 @@ int32_t moduleAddr(pid_t pid, char *library)
 }
 
 /* Unsafe write func, bypasses page protection */
-char pokeAddr(pid_t pid, long addr, char *buf, int size)
-{
+char pokeAddr(pid_t pid, long addr, char *buf, int size) {
   int i = 0, j = size / sizeof(long);
   pokeData data;
 
   ptrace(PTRACE_ATTACH, pid, 0, 0);
   waitpid(pid, 0, 0);
 
-  for (i = 0; i < j; i++, buf += sizeof(long))
-  {
+  for (i = 0; i < j; i++, buf += sizeof(long)) {
     memcpy(data.chars, buf, sizeof(long));
     ptrace(PTRACE_POKEDATA, pid, addr + i * 4, data.val);
   }
@@ -202,8 +167,8 @@ char pokeAddr(pid_t pid, long addr, char *buf, int size)
 }
 
 /* Safe read func */
-char readAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size)
-{
+/* @TODO: replace with reading from /proc/pid/mem */
+char readAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size) {
   struct iovec local[1];
   struct iovec remote[1];
 
@@ -216,8 +181,8 @@ char readAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size)
 }
 
 /* Safe write func, does not bypass page protection */
-char writeAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size)
-{
+/* @TODO: replace with writing to /proc/pid/mem */
+char writeAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size) {
   struct iovec local[1];
   struct iovec remote[1];
 

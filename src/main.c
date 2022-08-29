@@ -10,16 +10,16 @@
 #include "../include/keyboard.h"
 #include "../include/utils.h"
 
+#include <linux/uinput.h>
+#include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <signal.h>
-#include <pthread.h>
 #include <sys/types.h>
-#include <linux/uinput.h>
 
 #ifndef VERSION
-#  define VERSION "No version provided at compile time"
+#define VERSION "UNDEFINED"
 #endif
 
 static void initCommands(void);
@@ -28,44 +28,30 @@ static void sigTrap(int);
 
 static Game game;
 
-int main(int argc, char **argv)
-{
+int main(void) {
   pthread_t threadID;
 
-  if (argc == 2 && strcmp(argv[1], "-v") == 0)
-  {
-    printf("L4D2 Cheat %s\n", VERSION);
-    return 0;
-  }
-  else if (argc != 1)
-  {
-    fprintf(stderr, "%s: [-v]\n", argv[0]);
-    return 1;
-  }
+  if (checkAllowed() != 0)
+    die("(checkAllowed) You must run this program as root");
 
-  signal(SIGINT, sigTrap);
-
-  checkAllowed();
-
+  printf("Version (%s) of the cheat has loaded\n", VERSION);
   openGame(&game, "hl2_linux");
-
+  
   pthread_create(&threadID, NULL, mainThread, NULL);
-
   initCommands();
 
+  signal(SIGINT, sigTrap);
   return 0;
 }
 
 /* Create our commands and handler */
-static void initCommands(void)
-{
+static void initCommands(void) {
   char *line = NULL;
 
   addCommand("glow", 1, toggleEsp);
   addCommand("noboom", 1, toggleNoBoom);
 
-  while (1)
-  {
+  while (1) {
     printf("> ");
     line = getLine(line);
     splitArguments(&game, line);
@@ -75,13 +61,11 @@ static void initCommands(void)
 }
 
 /* Main cheat thread */
-static void *mainThread(void *_)
-{
+static void *mainThread(void *_) {
   int playerFlag;
   (void)_; /* ignoring extra thread arg */
 
-  while (1)
-  {
+  while (1) {
     manageInput();
 
     if (playerFound(&game) == 0)
@@ -96,21 +80,20 @@ static void *mainThread(void *_)
     if (!game.doBhop)
       continue;
 
-    readAddr(game.pid,
-             game.Player + Offsets.PlrCrouch,
-             &playerFlag, sizeof(playerFlag));
+    readAddr(game.pid, game.Player + Offsets.PlrCrouch, &playerFlag,
+             sizeof(playerFlag));
 
     if (playerFlag == 131 || playerFlag == 643)
       sendInput(KEY_SPACE);
 
     doSleep(10000);
   }
-  return NULL;
+
+  return 0;
 }
 
 /* Wait for Ctrl + C */
-static void sigTrap(int sig)
-{
+static void sigTrap(int sig) {
   signal(sig, SIG_IGN);
   closeKeyboard();
 }

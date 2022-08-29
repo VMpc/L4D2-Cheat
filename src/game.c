@@ -13,12 +13,7 @@
 #include <unistd.h>
 
 /* Initalizes the cheat */
-void openGame(Game *game, char *name)
-{
-  printf("The cheat has loaded, waiting for L4D2...\n");
-  openKeyboard();
-  openUinputKeyboard();
-
+void openGame(Game *game, char *name) {
   while ((game->pid = findPid(name)) == 0)
     sleep(1);
   printf("Found L4D2 (PID: %d)\n", game->pid);
@@ -26,23 +21,22 @@ void openGame(Game *game, char *name)
   while ((game->clientModule = moduleAddr(game->pid, "client.so")) == 0)
     sleep(1);
 
-  printf("Found L4D2s module address (client.so -> %x)\n",
-	game->clientModule);
+  openKeyboard();
+  openUinputKeyboard();
+  printf("Found L4D2s module address (client.so -> %x)\n", game->clientModule);
 }
 
 /* Checks if our player exists */
-char playerFound(Game *game)
-{
+char playerFound(Game *game) {
   return readAddr(game->pid, game->clientModule + Offsets.PlayerAddr,
-	&game->Player, sizeof(game->Player));
+                  &game->Player, sizeof(game->Player));
 }
 
 /*
- 	* Toggle a cheats flag
-	* TODO: Allow ToggleFlag to support any type (Including write to addresses)
-*/
-void toggleFlag(char *addr, char toggle, char *printStr)
-{
+ * Toggle a cheats flag
+ * TODO: Allow ToggleFlag to support any type (Including write to addresses)
+ */
+void toggleFlag(char *addr, char toggle, char *printStr) {
   *addr = toggle;
   printf("%s\n", printStr);
 }
@@ -56,5 +50,4 @@ struct OffsetStruct Offsets = {
 
     /* Offsets */
     0xE0, /* Crouch flag (0XF0 on windows) */
-
 };

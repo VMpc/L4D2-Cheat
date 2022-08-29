@@ -9,8 +9,7 @@
 
 #include <sys/types.h>
 
-typedef struct
-{
+typedef struct {
   int32_t clientModule; /* client.so */
   pid_t pid;            /* L4D2 pid */
   int32_t Player;       /* ASLR bypassed player addr */
@@ -18,8 +17,7 @@ typedef struct
   char doBhop; /* this should be in it's own "options" struct */
 } Game;
 
-struct OffsetStruct
-{
+struct OffsetStruct {
   int32_t PlayerAddr;
   int32_t GlowAddr;
   int32_t BoomAddr;

@@ -15,8 +15,7 @@ int cmdAmount = -1;
 struct Cmd Commands[MAX_COMMANDS];
 
 /* Initializes a command for the handler */
-void addCommand(char *cmdName, int argCount, char *(*func)(Game *, char **))
-{
+void addCommand(char *cmdName, int argCount, char *(*func)(Game *, char **)) {
   Command cmd;
   cmd.name = cmdName;
   cmd.argCount = argCount;
@@ -26,13 +25,11 @@ void addCommand(char *cmdName, int argCount, char *(*func)(Game *, char **))
 }
 
 /* Checks & runs a command with the split arguments */
-char *executeCommand(Game *game, char **args, int spaces)
-{
+char *executeCommand(Game *game, char **args, int spaces) {
   int i;
   char *res = "Not Found";
 
-  for (i = 0; i < cmdAmount + 1; i++)
-  {
+  for (i = 0; i < cmdAmount + 1; i++) {
     if (strcmp(Commands[i].name, args[0]) || Commands[i].argCount >= spaces)
       continue;
 
@@ -44,15 +41,13 @@ char *executeCommand(Game *game, char **args, int spaces)
 }
 
 /* Split stdin into a command + arguments */
-void splitArguments(Game *game, char *str)
-{
+void splitArguments(Game *game, char *str) {
 
   char **args = NULL;
   char *ptr = strtok(str, " ");
   int spaces = 0;
 
-  while (ptr)
-  {
+  while (ptr) {
     if ((args = realloc(args, sizeof(char *) * ++spaces)) == NULL)
       return;
 
