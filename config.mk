@@ -10,7 +10,6 @@ VERSION = $(shell head -n 1 VERSION)
 
 LDFLAGS = -pthread
 CFLAGS  = -ansi \
-          -m32 \
           -pedantic \
           -Wall \
           -Wextra \

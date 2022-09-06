@@ -9,17 +9,15 @@
 #include "../include/utils.h"
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 /* Initalizes the cheat */
 void openGame(Game *game, char *name) {
-  while ((game->pid = findPid(name)) == 0)
-    sleep(1);
+  if ((game->pid = findPid(name)) == 0)
+    die("L4D2 not found");
   printf("Found L4D2 (PID: %d)\n", game->pid);
 
   while ((game->clientModule = moduleAddr(game->pid, "client.so")) == 0)
-    sleep(1);
+    doSleep(1000000);
 
   openKeyboard();
   openUinputKeyboard();

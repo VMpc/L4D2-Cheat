@@ -17,9 +17,11 @@ typedef union PokeUnion {
 /* Functions */
 char checkAllowed(void);
 
+char checkGame(pid_t);
+
 void doSleep(int);
 
-void die(const char *, ...);
+void die(const char *);
 
 pid_t findPid(char *);
 
@@ -29,7 +31,7 @@ int32_t moduleAddr(pid_t, char *);
 
 char pokeAddr(pid_t, long, char *, int);
 
-char readAddr(pid_t, ssize_t, void *, ssize_t);
+char readAddr(pid_t, unsigned int, void *, size_t);
 
 char writeAddr(pid_t, ssize_t, void *, ssize_t);
 

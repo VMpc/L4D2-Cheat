@@ -10,13 +10,11 @@
 #include "../include/keyboard.h"
 #include "../include/utils.h"
 
-#include <linux/uinput.h>
+#include <linux/input.h>
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
 
 #ifndef VERSION
 #define VERSION "UNDEFINED"
@@ -30,9 +28,8 @@ static Game game;
 
 int main(void) {
   pthread_t threadID;
-
-  if (checkAllowed() != 0)
-    die("(checkAllowed) You must run this program as root");
+  if (checkAllowed() == 1)
+    die("You must run this program as root");
 
   printf("Version (%s) of the cheat has loaded\n", VERSION);
   openGame(&game, "hl2_linux");
@@ -55,9 +52,9 @@ static void initCommands(void) {
     printf("> ");
     line = getLine(line);
     splitArguments(&game, line);
-
-    free(line);
   }
+
+  free(line);
 }
 
 /* Main cheat thread */
@@ -66,9 +63,12 @@ static void *mainThread(void *_) {
   (void)_; /* ignoring extra thread arg */
 
   while (1) {
+    if (!checkGame(game.pid))
+      die("Game is not running");
+
     manageInput();
 
-    if (playerFound(&game) == 0)
+    if (playerFound(&game) == -1)
       continue;
 
     if (KeyList[KEY_UP].Value == 1 && !game.doBhop)

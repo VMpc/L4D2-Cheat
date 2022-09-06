@@ -8,43 +8,36 @@
 
 #include "../include/utils.h"
 
-#include <stdarg.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <dirent.h>
 #include <fcntl.h>
-#include <linux/uinput.h>
-#include <pthread.h>
-#include <pwd.h>
 #include <sys/ptrace.h>
 #include <sys/uio.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-void die(const char *fmt, ...) {
-  va_list ap;
-
-  va_start(ap, fmt);
-  vfprintf(stderr, fmt, ap);
-  va_end(ap);
-
-  if (fmt[0] && fmt[strlen(fmt) - 1] == ':') {
-    fputc(' ', stderr);
-    perror(NULL);
-  } else {
-    fputc('\n', stderr);
-  }
-
+void die(const char *str) {
+  printf("%s\n", str);
   exit(1);
 }
 
 /* Check if the user has the required permissions to run this program */
 char checkAllowed(void) {
-  if (getuid() == 1000)
-    return -1;
+  return getuid() == 1000;
+}
+
+char checkGame(pid_t pid) {
+  char fileName[FILENAME_MAX];
+  DIR *dir;
+  sprintf(fileName, "/proc/%d", pid);
+
+  if ((dir = opendir(fileName))) {
+    closedir(dir);
+    return 1;
+  }
 
   return 0;
 }
@@ -57,12 +50,12 @@ void doSleep(int ms) {
   select(0, NULL, NULL, NULL, &tv);
 }
 
-/* find the procid of a running process */
+/* find the PID of a running process */
 pid_t findPid(char *name) {
   struct dirent *de;
   DIR *dir;
   FILE *f;
-  char fileName[20], fileContent[150];
+  char fileName[FILENAME_MAX], fileContent[150];
   pid_t pid;
 
   if ((dir = opendir("/proc")) == NULL)
@@ -122,7 +115,7 @@ char *getLine(char *line) {
 
 /* Grabs a the base address of a shared object */
 int32_t moduleAddr(pid_t pid, char *library) {
-  char buf[200], libraryName[20], mapFilename[20];
+  char buf[200], libraryName[20], mapFilename[FILENAME_MAX];
   FILE *f;
 
   sprintf(mapFilename, "/proc/%d/maps", pid);
@@ -167,17 +160,24 @@ char pokeAddr(pid_t pid, long addr, char *buf, int size) {
 }
 
 /* Safe read func */
-/* @TODO: replace with reading from /proc/pid/mem */
-char readAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size) {
-  struct iovec local[1];
-  struct iovec remote[1];
+char readAddr(pid_t pid, unsigned int addr, void *buf, size_t size) {
+  int mFile, ret;
+  char fileName[FILENAME_MAX];
 
-  local[0].iov_base = buf;
-  local[0].iov_len = size;
-  remote[0].iov_base = (void *)addr;
-  remote[0].iov_len = size;
+  sprintf(fileName, "/proc/%d/mem", pid);
 
-  return process_vm_readv(pid, local, 1, remote, 1, 0) == size;
+  if ((mFile = open(fileName, O_RDONLY)) == -1)
+    ret = -1;
+
+  if (lseek(mFile, addr, SEEK_SET) == -1)
+    ret = -1;
+
+  if (read(mFile, buf, size) == -1)
+    ret = -1;
+
+  close(mFile);
+
+  return ret;
 }
 
 /* Safe write func, does not bypass page protection */

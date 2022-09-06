@@ -7,11 +7,9 @@
 #include "../include/keyboard.h"
 #include "../include/utils.h"
 
-#include <ctype.h>
 #include <fcntl.h>
 #include <linux/uinput.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -29,10 +27,10 @@ void closeKeyboard(void) {
 /* Finds a /dev/input device */
 void openKeyboard(void) {
   FILE *f;
-  char eventName[9], fileName[25], lineBuf[1024];
+  char eventName[9], fileName[FILENAME_MAX], lineBuf[1024];
 
   if ((f = fopen("/proc/bus/input/devices", "r")) == NULL)
-    die("(openKeyboard) could not open /proc/bus/input/devices");
+    die("Could not open /proc/bus/input/devices");
 
   while (fgets(lineBuf, sizeof(lineBuf), f)) {
     char *ptr;
@@ -54,7 +52,7 @@ void openKeyboard(void) {
 
   sprintf(fileName, "/dev/input/%s", eventName);
   if ((fd = open(fileName, O_RDONLY | O_NONBLOCK)) == -1)
-    die("(openKeyboard) could not open the input device");
+    die("Could not open the input device");
 }
 
 /* Creates a virtual device */
@@ -63,7 +61,7 @@ void openUinputKeyboard(void) {
   struct uinput_setup usetup = {0};
 
   if ((uinputfd = open("/dev/uinput", O_WRONLY | O_NONBLOCK)) == -1)
-    die("/dev/uninput error");
+    die("Could not open /dev/uinput");
 
   ioctl(uinputfd, UI_SET_EVBIT, EV_KEY);
   ioctl(uinputfd, UI_SET_KEYBIT, KEY_SPACE);
