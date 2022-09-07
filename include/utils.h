@@ -21,7 +21,7 @@ char checkGame(pid_t);
 
 void doSleep(int);
 
-void die(const char *);
+void die(char, const char *);
 
 pid_t findPid(char *);
 

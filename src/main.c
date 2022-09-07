@@ -28,11 +28,9 @@ static Game game;
 
 int main(void) {
   pthread_t threadID;
-  if (checkAllowed() == 1)
-    die("You must run this program as root");
+  die(checkAllowed() == 1, "You must run this program as root");
 
-  printf("Version (%s) of the cheat has loaded\n", VERSION);
-  openGame(&game, "hl2_linux");
+  openGame(VERSION, &game, "hl2_linux");
 
   pthread_create(&threadID, NULL, mainThread, NULL);
   initCommands();
@@ -52,19 +50,16 @@ static void initCommands(void) {
     printf("> ");
     line = getLine(line);
     splitArguments(&game, line);
-
-    free(line);
   }
+  free(line);
 }
 
 /* Main cheat thread */
 static void *mainThread(void *_) {
-  int playerFlag;
   (void)_; /* ignoring extra thread arg */
 
   while (1) {
-    if (checkGame(game.pid) == -1)
-      die("Game is not running");
+    die(checkGame(game.pid) == -1, "Game is not running");
 
     manageInput();
 
@@ -80,10 +75,7 @@ static void *mainThread(void *_) {
     if (!game.doBhop)
       continue;
 
-    readAddr(game.pid, game.Player + Offsets.PlrCrouch, &playerFlag,
-             sizeof(playerFlag));
-
-    if (playerFlag == 131 || playerFlag == 643)
+    if (game.Player.FFlags == 131 || game.Player.FFlags == 643)
       sendInput(KEY_SPACE);
 
     doSleep(100);

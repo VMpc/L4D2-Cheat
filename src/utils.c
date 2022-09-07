@@ -18,7 +18,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-void die(const char *str) {
+void die(char doExit, const char *str) {
+  if (!doExit)
+    return;
+
   printf("%s\n", str);
   exit(1);
 }
@@ -57,8 +60,7 @@ pid_t findPid(char *name) {
   char fileName[FILENAME_MAX], fileContent[150];
   pid_t pid;
 
-  if ((dir = opendir("/proc")) == NULL)
-    die("Could not open /proc directory");
+  die((dir = opendir("/proc")) == NULL, "Could not open /proc directory");
 
   while ((de = readdir(dir)) != NULL) {
     if ((pid = atoi(de->d_name)) == 0)
@@ -112,6 +114,7 @@ char *getLine(char *line) {
   return line;
 }
 
+/* Gets the start - end of a module */
 void moduleAddr(pid_t pid, char *lib, int32_t *start, int32_t *end) {
   char fileName[FILENAME_MAX];
   char buf[248], libName[64], rwxp[4];

@@ -10,11 +10,21 @@
 #include <sys/types.h>
 
 typedef struct {
+  char _1[0xDC]; /* 0xDC */
+  int Health;    /* Health (0xEC on windows) */
+
+  char _2[0x0]; /* 0xE0 */
+  int FFlags;   /* Crouch flag (0xF0 on windows) */
+
+  int32_t Address; /* The ASLR bypassed address of the LocalPlayer */
+} Player;
+
+typedef struct {
   pid_t pid; /* L4D2 pid */
 
   int32_t clientModule;    /* client.so */
   int32_t clientModuleEnd; /* client.so end */
-  int32_t Player;          /* ASLR bypassed player addr */
+  Player Player;           /* The player struct */
 
   char doBhop; /* this should be in it's own "options" struct */
 } Game;
@@ -23,13 +33,11 @@ struct OffsetStruct {
   int32_t PlayerAddr;
   int32_t GlowAddr;
   int32_t BoomAddr;
-
-  int PlrCrouch;
 };
 
 extern struct OffsetStruct Offsets;
 
-void openGame(Game *, char *);
+void openGame(char *, Game *, char *);
 
 char playerFound(Game *);
 
