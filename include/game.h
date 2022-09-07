@@ -10,9 +10,11 @@
 #include <sys/types.h>
 
 typedef struct {
-  int32_t clientModule; /* client.so */
-  pid_t pid;            /* L4D2 pid */
-  int32_t Player;       /* ASLR bypassed player addr */
+  pid_t pid; /* L4D2 pid */
+
+  int32_t clientModule;    /* client.so */
+  int32_t clientModuleEnd; /* client.so end */
+  int32_t Player;          /* ASLR bypassed player addr */
 
   char doBhop; /* this should be in it's own "options" struct */
 } Game;

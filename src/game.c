@@ -12,16 +12,20 @@
 
 /* Initalizes the cheat */
 void openGame(Game *game, char *name) {
-  if ((game->pid = findPid(name)) == 0)
+
+  if ((game->pid = findPid(name)) == -1)
     die("L4D2 not found");
   printf("Found L4D2 (PID: %d)\n", game->pid);
 
-  while ((game->clientModule = moduleAddr(game->pid, "client.so")) == 0)
-    doSleep(1000000);
+  moduleAddr(game->pid, "/bin/client.so", &game->clientModule,
+             &game->clientModuleEnd);
+  if ((game->clientModule + game->clientModuleEnd) == 0)
+    die("Could not get the client.so module\n");
 
   openKeyboard();
   openUinputKeyboard();
-  printf("Found L4D2s module address (client.so -> %x)\n", game->clientModule);
+  printf("Found L4D2s module address (client.so -> (%x-%x))\n",
+         game->clientModule, game->clientModuleEnd);
 }
 
 /* Checks if our player exists */

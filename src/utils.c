@@ -3,7 +3,6 @@
  * Licensed under GPL version 3 or later.
  * See LICENSE for copyright information.
  */
-
 #define _GNU_SOURCE
 
 #include "../include/utils.h"
@@ -24,22 +23,21 @@ void die(const char *str) {
   exit(1);
 }
 
-/* Check if the user has the required permissions to run this program */
-char checkAllowed(void) {
-  return getuid() == 1000;
-}
+/* Check if the running user is root */
+char checkAllowed(void) { return getuid() == 1000; }
 
+/* Check if the game is running */
 char checkGame(pid_t pid) {
   char fileName[FILENAME_MAX];
   DIR *dir;
   sprintf(fileName, "/proc/%d", pid);
 
-  if ((dir = opendir(fileName))) {
+  if ((dir = opendir(fileName)) != NULL) {
     closedir(dir);
-    return 1;
+    return 0;
   }
 
-  return 0;
+  return -1;
 }
 
 /* Sleep in microseconds */
@@ -47,6 +45,7 @@ void doSleep(int ms) {
   struct timeval tv;
   tv.tv_sec = 0;
   tv.tv_usec = ms;
+
   select(0, NULL, NULL, NULL, &tv);
 }
 
@@ -75,7 +74,7 @@ pid_t findPid(char *name) {
     if (strstr(fileContent, name))
       break;
 
-    pid = 0;
+    pid = -1;
   }
 
   closedir(dir);
@@ -113,30 +112,33 @@ char *getLine(char *line) {
   return line;
 }
 
-/* Grabs a the base address of a shared object */
-int32_t moduleAddr(pid_t pid, char *library) {
-  char buf[200], libraryName[20], mapFilename[FILENAME_MAX];
+void moduleAddr(pid_t pid, char *lib, int32_t *start, int32_t *end) {
+  char fileName[FILENAME_MAX];
+  char buf[248], libName[64], rwxp[4];
   FILE *f;
 
-  sprintf(mapFilename, "/proc/%d/maps", pid);
-  if (library)
-    sprintf(libraryName, "/bin/%s", library);
+  sprintf(fileName, "/proc/%d/maps", pid);
+  if (lib)
+    sprintf(libName, "%s", lib);
 
-  if ((f = fopen(mapFilename, "r")) == NULL)
-    return 0;
+  if ((f = fopen(fileName, "r")) == NULL)
+    return;
 
-  while (fgets(buf, sizeof(buf), f) != NULL) {
-    if (library && !(strstr(buf, libraryName)))
+  while (fgets(buf, sizeof(buf), f)) {
+    if (lib && !strstr(buf, libName))
       continue;
 
-    break;
+    sscanf(buf, "%lx-%lx %s", (unsigned long *)start, (unsigned long *)end,
+           rwxp);
+    if (rwxp[0] == 'r' && rwxp[2] == 'x')
+      break;
   }
   fclose(f);
 
-  return strtoul(buf, NULL, 16);
+  return;
 }
 
-/* Unsafe write func, bypasses page protection */
+/* Unsafe (Detectable) write func, write instructions */
 char pokeAddr(pid_t pid, long addr, char *buf, int size) {
   int i = 0, j = size / sizeof(long);
   pokeData data;
@@ -149,8 +151,7 @@ char pokeAddr(pid_t pid, long addr, char *buf, int size) {
     ptrace(PTRACE_POKEDATA, pid, addr + i * 4, data.val);
   }
 
-  j = size % sizeof(long);
-  if (j == 0)
+  if ((j = size % sizeof(long)) == 0)
     return ptrace(PTRACE_DETACH, pid, 0, 0);
 
   memcpy(data.chars, buf, j);
@@ -160,36 +161,63 @@ char pokeAddr(pid_t pid, long addr, char *buf, int size) {
 }
 
 /* Safe read func */
+/* @TODO: replace lseek64 */
 char readAddr(pid_t pid, unsigned int addr, void *buf, size_t size) {
-  int mFile, ret;
+  int f, ret;
   char fileName[FILENAME_MAX];
 
   sprintf(fileName, "/proc/%d/mem", pid);
 
-  if ((mFile = open(fileName, O_RDONLY)) == -1)
+  if ((f = open(fileName, O_RDONLY)) == -1)
     ret = -1;
 
-  if (lseek(mFile, addr, SEEK_SET) == -1)
+  if (lseek64(f, addr, SEEK_SET) == -1)
     ret = -1;
 
-  if (read(mFile, buf, size) == -1)
+  if (read(f, buf, size) == -1)
     ret = -1;
 
-  close(mFile);
+  close(f);
 
   return ret;
 }
 
-/* Safe write func, does not bypass page protection */
-/* @TODO: replace with writing to /proc/pid/mem */
+/* Scan for a signature through a memory region to get an address */
+/* @TODO: if issues arise, add wildcard */
+off_t ScanAddr(int32_t start, int32_t end, const char *sig) {
+  pokeData data;
+
+  while (start < end) {
+    data.val = start;
+    if (data.chars[0] == sig[0] && memcmp(data.chars, sig, strlen(sig)) == 1)
+      break;
+
+    start++;
+  }
+
+  if ((end - 1) == start)
+    return 0;
+
+  return start;
+}
+
+/* Safe write func, write values */
 char writeAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size) {
-  struct iovec local[1];
-  struct iovec remote[1];
+  int f, ret;
+  char fileName[FILENAME_MAX];
 
-  local[0].iov_base = buf;
-  local[0].iov_len = size;
-  remote[0].iov_base = (void *)addr;
-  remote[0].iov_len = size;
+  sprintf(fileName, "/proc/%d/mem", pid);
 
-  return process_vm_writev(pid, local, 1, remote, 1, 0) == size;
+  if ((f = open(fileName, O_WRONLY)) == -1)
+    ret = -1;
+
+  if (lseek(f, addr, SEEK_SET) == -1)
+    ret = -1;
+
+  if (write(f, buf, size) == -1)
+    ret = -1;
+
+  close(f);
+
+  return ret;
 }

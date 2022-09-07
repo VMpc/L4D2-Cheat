@@ -27,11 +27,13 @@ pid_t findPid(char *);
 
 char *getLine(char *);
 
-int32_t moduleAddr(pid_t, char *);
+void moduleAddr(pid_t pid, char *lib, int32_t *start, int32_t *end);
 
 char pokeAddr(pid_t, long, char *, int);
 
 char readAddr(pid_t, unsigned int, void *, size_t);
+
+off_t ScanAddr(int32_t, int32_t, const char *);
 
 char writeAddr(pid_t, ssize_t, void *, ssize_t);
 

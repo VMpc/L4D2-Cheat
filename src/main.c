@@ -52,9 +52,9 @@ static void initCommands(void) {
     printf("> ");
     line = getLine(line);
     splitArguments(&game, line);
-  }
 
-  free(line);
+    free(line);
+  }
 }
 
 /* Main cheat thread */
@@ -63,7 +63,7 @@ static void *mainThread(void *_) {
   (void)_; /* ignoring extra thread arg */
 
   while (1) {
-    if (!checkGame(game.pid))
+    if (checkGame(game.pid) == -1)
       die("Game is not running");
 
     manageInput();

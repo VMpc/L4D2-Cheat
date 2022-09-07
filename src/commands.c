@@ -12,19 +12,17 @@
 
 char *toggleEsp(Game *game, char **args) {
   char *NOPs = "\x90\x90\x90\x90\x90\x90\xFF";
-  char *Revert = "\x0F\x83\xD1\x01\x00\x00\x0FF\x90";
+  char *Revert = "\x0F\x83\xD1\x01\x00\x00\xFF\x90";
 
   if (strstr(args[1], "on")) {
     pokeAddr(game->pid, game->clientModule + Offsets.GlowAddr, NOPs,
              strlen(NOPs));
     return "Turned on esp";
-  } else if (strstr(args[1], "off")) {
-    pokeAddr(game->pid, game->clientModule + Offsets.GlowAddr, Revert,
-             strlen(Revert));
-    return "Turned off esp";
   }
 
-  return "What were you trying to do?";
+  pokeAddr(game->pid, game->clientModule + Offsets.GlowAddr, Revert,
+           strlen(Revert));
+  return "Turned off esp";
 }
 
 char *toggleNoBoom(Game *game, char **args) {
@@ -35,11 +33,9 @@ char *toggleNoBoom(Game *game, char **args) {
     pokeAddr(game->pid, game->clientModule + Offsets.BoomAddr, NOPs,
              strlen(NOPs));
     return "Turned on no-boom";
-  } else if (strstr(args[1], "off")) {
-    pokeAddr(game->pid, game->clientModule + Offsets.BoomAddr, Revert,
-             strlen(Revert));
-    return "Turned off no-boom";
   }
 
-  return "What were you trying to do?";
+  pokeAddr(game->pid, game->clientModule + Offsets.BoomAddr, Revert,
+           strlen(Revert));
+  return "Turned off no-boom";
 }
