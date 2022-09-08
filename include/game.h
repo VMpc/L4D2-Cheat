@@ -37,7 +37,7 @@ struct OffsetStruct {
 
 extern struct OffsetStruct Offsets;
 
-void openGame(char *, Game *, char *);
+void openGame(Game *, char *);
 
 char playerFound(Game *);
 

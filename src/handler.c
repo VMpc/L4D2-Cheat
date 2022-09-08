@@ -15,7 +15,7 @@ int cmdAmount = -1;
 struct Cmd Commands[MAX_COMMANDS];
 
 /* Initializes a command for the handler */
-void addCommand(char *cmdName, int argCount, char *(*func)(Game *, char **)) {
+void addCommand(char *cmdName, int8_t argCount, char *(*func)(Game *, char **)) {
   Command cmd;
   cmd.name = cmdName;
   cmd.argCount = argCount;
@@ -25,7 +25,7 @@ void addCommand(char *cmdName, int argCount, char *(*func)(Game *, char **)) {
 }
 
 /* Checks & runs a command with the split arguments */
-char *executeCommand(Game *game, char **args, int spaces) {
+char *executeCommand(Game *game, char **args, int8_t spaces) {
   int i;
   char *res = "Not Found";
 

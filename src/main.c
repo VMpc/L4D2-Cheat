@@ -16,10 +16,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef VERSION
-#define VERSION "UNDEFINED"
-#endif
-
 static void initCommands(void);
 static void *mainThread(void *);
 static void sigTrap(int);
@@ -30,7 +26,7 @@ int main(void) {
   pthread_t threadID;
   die(checkAllowed() == 1, "You must run this program as root");
 
-  openGame(VERSION, &game, "hl2_linux");
+  openGame(&game, "hl2_linux");
 
   pthread_create(&threadID, NULL, mainThread, NULL);
   initCommands();

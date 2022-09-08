@@ -33,8 +33,8 @@ char checkAllowed(void) { return getuid() == 1000; }
 char checkGame(pid_t pid) {
   char fileName[FILENAME_MAX];
   DIR *dir;
-  sprintf(fileName, "/proc/%d", pid);
 
+  sprintf(fileName, "/proc/%d", pid);
   if ((dir = opendir(fileName)) != NULL) {
     closedir(dir);
     return 0;
@@ -54,11 +54,11 @@ void doSleep(int ms) {
 
 /* find the PID of a running process */
 pid_t findPid(char *name) {
-  struct dirent *de;
-  DIR *dir;
   FILE *f;
-  char fileName[FILENAME_MAX], fileContent[150];
+  DIR *dir;
   pid_t pid;
+  struct dirent *de;
+  char fileName[FILENAME_MAX], fileContent[150];
 
   die((dir = opendir("/proc")) == NULL, "Could not open /proc directory");
 
@@ -142,7 +142,7 @@ void moduleAddr(pid_t pid, char *lib, int32_t *start, int32_t *end) {
 }
 
 /* Unsafe (Detectable) write func, write instructions */
-char pokeAddr(pid_t pid, long addr, char *buf, int size) {
+char pokeAddr(pid_t pid, int32_t addr, char *buf, size_t size) {
   int i = 0, j = size / sizeof(long);
   pokeData data;
 
@@ -163,22 +163,23 @@ char pokeAddr(pid_t pid, long addr, char *buf, int size) {
   return ptrace(PTRACE_DETACH, pid, 0, 0);
 }
 
+#include <errno.h>
 /* Safe read func */
 /* @TODO: replace lseek64 */
 char readAddr(pid_t pid, unsigned int addr, void *buf, size_t size) {
-  int f, ret;
+  int f;
+  int8_t ret;
   char fileName[FILENAME_MAX];
 
   sprintf(fileName, "/proc/%d/mem", pid);
 
   if ((f = open(fileName, O_RDONLY)) == -1)
-    ret = -1;
+    return -1;
 
-  if (lseek64(f, addr, SEEK_SET) == -1)
-    ret = -1;
+  if ((ret = lseek64(f, addr, SEEK_SET)) == -1)
+    read(f, buf, size);
 
-  if (read(f, buf, size) == -1)
-    ret = -1;
+  printf("%s\n", strerror(errno));
 
   close(f);
 
@@ -205,22 +206,18 @@ off_t ScanAddr(int32_t start, int32_t end, const char *sig) {
 }
 
 /* Safe write func, write values */
-char writeAddr(pid_t pid, ssize_t addr, void *buf, ssize_t size) {
+char writeAddr(pid_t pid, int32_t addr, void *buf, size_t size) {
   int f, ret;
   char fileName[FILENAME_MAX];
 
   sprintf(fileName, "/proc/%d/mem", pid);
 
   if ((f = open(fileName, O_WRONLY)) == -1)
-    ret = -1;
+    return -1;
 
-  if (lseek(f, addr, SEEK_SET) == -1)
-    ret = -1;
-
-  if (write(f, buf, size) == -1)
-    ret = -1;
+  if ((ret = lseek(f, addr, SEEK_SET)) == -1)
+    write(f, buf, size);
 
   close(f);
-
   return ret;
 }

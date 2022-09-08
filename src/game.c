@@ -10,8 +10,12 @@
 
 #include <stdio.h>
 
+#ifndef VERSION
+#define VERSION "UNDEFINED"
+#endif
+
 /* Initalizes the cheat */
-void openGame(char *version, Game *game, char *name) {
+void openGame(Game *game, char *name) {
   die((game->pid = findPid(name)) == -1, "L4D2 not found");
 
   moduleAddr(game->pid, "/bin/client.so", &game->clientModule,
@@ -24,7 +28,7 @@ void openGame(char *version, Game *game, char *name) {
 
   printf(
       "Version (%s) of the cheat has loaded (PID: %d, client.so -> (%x-%x))\n",
-      version, game->pid, game->clientModule, game->clientModuleEnd);
+      VERSION, game->pid, game->clientModule, game->clientModuleEnd);
 }
 
 /* Checks if our player exists */
