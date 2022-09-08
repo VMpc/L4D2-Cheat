@@ -11,15 +11,15 @@
 
 #define MAX_COMMANDS 50
 
-void addCommand(char *, int, char *(*func)(Game *, char **));
+void addCommand(char *, int8_t, char *(*func)(Game *, char **));
 
-char *executeCommand(Game *, char **, int);
+char *executeCommand(Game *, char **, int8_t);
 
 void splitArguments(Game *, char *);
 
 typedef struct Cmd {
   char *name;
-  int argCount;
+  int8_t argCount;
   char *(*func)(Game *, char **);
 } Command;
 
