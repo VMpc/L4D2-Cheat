@@ -20,10 +20,10 @@ void moduleAddr(pid_t pid, char *lib, int32_t *start, int32_t *end);
 
 char pokeAddr(pid_t, int32_t, char *, size_t);
 
-char readAddr(pid_t, unsigned int, void *, size_t);
+char readAddr(pid_t, u_int32_t, void *, size_t);
 
 off_t ScanAddr(int32_t, int32_t, const char *);
 
-char writeAddr(pid_t, int32_t, void *, size_t);
+char writeAddr(pid_t, u_int32_t, void *, size_t);
 
 #endif /* _MEM_H */

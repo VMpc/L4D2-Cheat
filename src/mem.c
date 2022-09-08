@@ -65,7 +65,7 @@ char pokeAddr(pid_t pid, int32_t addr, char *buf, size_t size) {
 
 /* Safe read func */
 /* @TODO: replace lseek64 */
-char readAddr(pid_t pid, unsigned int addr, void *buf, size_t size) {
+char readAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
   int f;
   int8_t ret;
   char fileName[FILENAME_MAX];
@@ -102,7 +102,7 @@ off_t ScanAddr(int32_t start, int32_t end, const char *sig) {
 }
 
 /* Safe write func, write values */
-char writeAddr(pid_t pid, int32_t addr, void *buf, size_t size) {
+char writeAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
   int f, ret;
   char fileName[FILENAME_MAX];
 
@@ -111,7 +111,7 @@ char writeAddr(pid_t pid, int32_t addr, void *buf, size_t size) {
   if ((f = open(fileName, O_WRONLY)) == -1)
     return -1;
 
-  if ((ret = lseek(f, addr, SEEK_SET)) != -1)
+  if ((ret = lseek64(f, addr, SEEK_SET)) != -1)
     write(f, buf, size);
 
   close(f);
