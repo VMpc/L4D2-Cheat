@@ -163,7 +163,6 @@ char pokeAddr(pid_t pid, int32_t addr, char *buf, size_t size) {
   return ptrace(PTRACE_DETACH, pid, 0, 0);
 }
 
-#include <errno.h>
 /* Safe read func */
 /* @TODO: replace lseek64 */
 char readAddr(pid_t pid, unsigned int addr, void *buf, size_t size) {
@@ -178,8 +177,6 @@ char readAddr(pid_t pid, unsigned int addr, void *buf, size_t size) {
 
   if ((ret = lseek64(f, addr, SEEK_SET)) == -1)
     read(f, buf, size);
-
-  printf("%s\n", strerror(errno));
 
   close(f);
 

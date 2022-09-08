@@ -15,10 +15,10 @@ int cmdAmount = -1;
 struct Cmd Commands[MAX_COMMANDS];
 
 /* Initializes a command for the handler */
-void addCommand(char *cmdName, int8_t argCount, char *(*func)(Game *, char **)) {
+void addCommand(char *name, int8_t count, char *(*func)(Game *, char **)) {
   Command cmd;
-  cmd.name = cmdName;
-  cmd.argCount = argCount;
+  cmd.name = name;
+  cmd.argCount = count;
   cmd.func = func;
   Commands[cmdAmount + 1] = cmd;
   cmdAmount++;

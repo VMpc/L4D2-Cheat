@@ -43,7 +43,7 @@ char playerFound(Game *game) {
 
 /* Stores all of our addresses/Offsets */
 struct OffsetStruct Offsets = {
-    0x00ED93E8, /* Player Addr */
+    0x00ED93E8, /* LPlr Addr */
     0x7ED829,   /* Glow Addr */
     0x7F3635,   /* Boom Addr */
 };
