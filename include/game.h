@@ -20,7 +20,7 @@ typedef struct {
 } Player;
 
 typedef struct {
-  pid_t pid; /* L4D2 pid */
+  pid_t pid; /* Game pid */
 
   int32_t clientModule;    /* client.so */
   int32_t clientModuleEnd; /* client.so end */

@@ -18,7 +18,7 @@
 /* Initalizes the cheat */
 void openGame(Game *game, char *name) {
   if ((game->pid = findPid(name)) == -1)
-    die("L4D2 not found");
+    die("PID not found");
 
   moduleAddr(game->pid, "/bin/client.so", &game->clientModule,
              &game->clientModuleEnd);
@@ -29,8 +29,8 @@ void openGame(Game *game, char *name) {
   openUinputKeyboard();
 
   printf(
-      "Version (%s) of the cheat has loaded (PID: %d, client.so -> (%x-%x))\n",
-      VERSION, game->pid, game->clientModule, game->clientModuleEnd);
+      "Version (%s) of the cheat has loaded\n%s -> PID: %d\nclient.so -> (%x-%x)\n",
+      VERSION, name, game->pid, game->clientModule, game->clientModuleEnd);
 }
 
 /* Checks if our player exists */
