@@ -6,6 +6,7 @@
 
 #include "../include/game.h"
 #include "../include/keyboard.h"
+#include "../include/mem.h"
 #include "../include/utils.h"
 
 #include <stdio.h>
@@ -16,12 +17,13 @@
 
 /* Initalizes the cheat */
 void openGame(Game *game, char *name) {
-  die((game->pid = findPid(name)) == -1, "L4D2 not found");
+  if ((game->pid = findPid(name)) == -1)
+    die("L4D2 not found");
 
   moduleAddr(game->pid, "/bin/client.so", &game->clientModule,
              &game->clientModuleEnd);
-  die((game->clientModule + game->clientModuleEnd) == 0,
-      "Could not get the client.so module\n");
+  if ((game->clientModule + game->clientModuleEnd) == 0)
+    die("Could not get the client.so module\n");
 
   openKeyboard();
   openUinputKeyboard();

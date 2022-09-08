@@ -29,8 +29,8 @@ void openKeyboard(void) {
   FILE *f;
   char eventName[9], fileName[FILENAME_MAX], lineBuf[1024];
 
-  die((f = fopen("/proc/bus/input/devices", "r")) == NULL,
-      "Could not open /proc/bus/input/devices");
+  if ((f = fopen("/proc/bus/input/devices", "r")) == NULL)
+    die("Could not open /proc/bus/input/devices");
 
   while (fgets(lineBuf, sizeof(lineBuf), f)) {
     char *ptr;
@@ -51,8 +51,8 @@ void openKeyboard(void) {
   fclose(f);
 
   sprintf(fileName, "/dev/input/%s", eventName);
-  die((fd = open(fileName, O_RDONLY | O_NONBLOCK)) == -1,
-      "Could not open the input device");
+  if ((fd = open(fileName, O_RDONLY | O_NONBLOCK)) == -1)
+    die("Could not open the input device");
 }
 
 /* Creates a virtual device */
@@ -60,8 +60,8 @@ void openKeyboard(void) {
 void openUinputKeyboard(void) {
   struct uinput_setup usetup = {0};
 
-  die((uinputfd = open("/dev/uinput", O_WRONLY | O_NONBLOCK)) == -1,
-      "Could not open /dev/uinput");
+  if ((uinputfd = open("/dev/uinput", O_WRONLY | O_NONBLOCK)) == -1)
+    die("Could not open /dev/uinput");
 
   ioctl(uinputfd, UI_SET_EVBIT, EV_KEY);
   ioctl(uinputfd, UI_SET_KEYBIT, KEY_SPACE);

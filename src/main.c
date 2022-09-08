@@ -15,6 +15,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 static void initCommands(void);
 static void *mainThread(void *);
@@ -24,7 +25,8 @@ static Game game;
 
 int main(void) {
   pthread_t threadID;
-  die(checkAllowed() == 1, "You must run this program as root");
+  if (getuid() != 0)
+    die("You must run this program as root");
 
   openGame(&game, "hl2_linux");
 
@@ -55,7 +57,8 @@ static void *mainThread(void *_) {
   (void)_; /* ignoring extra thread arg */
 
   while (1) {
-    die(checkGame(game.pid) == -1, "Game is not running");
+    if (checkGame(game.pid) == -1)
+      die("Game is not running");
 
     manageInput();
 

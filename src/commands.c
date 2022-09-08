@@ -6,7 +6,7 @@
 
 #include "../include/commands.h"
 #include "../include/game.h"
-#include "../include/utils.h"
+#include "../include/mem.h"
 
 #include <string.h>
 
