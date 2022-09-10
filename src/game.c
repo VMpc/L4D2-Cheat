@@ -51,8 +51,8 @@ void openGame(Game *game, char *name) {
 
 /* Checks if our player exists */
 char playerFound(Game *game) {
-  if (readAddr(game->pid, game->clientModule + game->Offsets.PlayerAddr, &game->Player.Address,
-               sizeof(game->Player.Address)) == -1)
+  if (readAddr(game->pid, game->clientModule + game->Offsets.PlayerAddr,
+               &game->Player.Address, sizeof(game->Player.Address)) == -1)
     return -1;
 
   return readAddr(game->pid, game->Player.Address, &game->Player,

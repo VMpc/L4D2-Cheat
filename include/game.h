@@ -30,8 +30,9 @@ typedef struct {
 
   u_int32_t clientModule;    /* client.so */
   u_int32_t clientModuleEnd; /* client.so end */
-  Offsets Offsets;           /* Game offsets */
-  Player Player;             /* The player struct */
+
+  Offsets Offsets; /* Game offsets */
+  Player Player;   /* The player struct */
 
   char doBhop; /* this should be in it's own "options" struct */
 } Game;

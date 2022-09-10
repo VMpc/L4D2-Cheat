@@ -9,8 +9,7 @@
 
 #include "game.h"
 
-char *toggleEsp(Game *, char **);
-
-char *toggleNoBoom(Game *, char **);
+void toggleEsp(Game *, char **restrict);
+void toggleNoBoom(Game *, char **restrict);
 
 #endif /* _COMMANDS_H */

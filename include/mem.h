@@ -18,7 +18,7 @@ typedef union {
 /* Functions */
 void moduleAddr(pid_t pid, char *lib, u_int32_t *, u_int32_t *);
 
-char pokeAddr(pid_t, u_int32_t, char *, size_t);
+char pokeAddr(pid_t, u_int32_t, const char *, size_t);
 
 char readAddr(pid_t, u_int32_t, void *, size_t);
 

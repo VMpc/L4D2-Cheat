@@ -12,10 +12,10 @@
 #include <string.h>
 
 int cmdAmount = -1;
-struct Cmd Commands[MAX_COMMANDS];
+Command Commands[MAX_COMMANDS];
 
 /* Initializes a command for the handler */
-void addCommand(char *name, int8_t count, char *(*func)(Game *, char **)) {
+void addCommand(char *restrict name, int8_t count, cmdfunc func) {
   Command cmd;
   cmd.name = name;
   cmd.argCount = count;
@@ -25,23 +25,25 @@ void addCommand(char *name, int8_t count, char *(*func)(Game *, char **)) {
 }
 
 /* Checks & runs a command with the split arguments */
-char *executeCommand(Game *game, char **args, int8_t spaces) {
+void executeCommand(Game *game, char **args, int8_t spaces) {
   int i;
-  char *res = "Not Found";
-
   for (i = 0; i < cmdAmount + 1; i++) {
     if (strcmp(Commands[i].name, args[0]) || Commands[i].argCount >= spaces)
       continue;
 
-    res = Commands[i].func(game, args);
-  }
-  free(args);
+    if (Commands[i].func == NULL) {
+      puts("Command not found.");
+      break;
+    }
 
-  return res;
+    Commands[i].func(game, args);
+  }
+
+  free(args);
 }
 
 /* Split stdin into a command + arguments */
-void splitArguments(Game *game, char *str) {
+void splitArguments(Game *restrict game, char *restrict str) {
 
   char **args = NULL;
   char *ptr = strtok(str, " ");
@@ -59,5 +61,5 @@ void splitArguments(Game *game, char *str) {
     return;
   args[spaces] = 0;
 
-  printf("%s\n", executeCommand(game, args, spaces));
+  executeCommand(game, args, spaces);
 }

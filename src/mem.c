@@ -42,7 +42,7 @@ void moduleAddr(pid_t pid, char *lib, u_int32_t *start, u_int32_t *end) {
 }
 
 /* Unsafe (Detectable) write func, write instructions */
-char pokeAddr(pid_t pid, u_int32_t addr, char *buf, size_t size) {
+char pokeAddr(pid_t pid, u_int32_t addr, const char *buf, size_t size) {
   int i = 0, j = size / sizeof(long);
   pokeData data;
 
