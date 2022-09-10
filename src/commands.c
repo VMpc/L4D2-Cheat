@@ -12,8 +12,8 @@
 #include <string.h>
 
 void toggleEsp(Game *game, char **restrict args) {
-  char *NOP = "\x90\x90\x90\x90\x90\x90\xFF";
-  char *REV = "\x0F\x83\xD1\x01\x00\x00\xFF";
+  const char *NOP = "\x90\x90\x90\x90\x90\x90\xFF";
+  const char *REV = "\x0F\x83\xD1\x01\x00\x00\xFF";
 
   if (strstr(args[1], "on")) {
     pokeAddr(game->pid, game->clientModule + game->Offsets.GlowAddr, NOP, 7);
@@ -26,12 +26,13 @@ void toggleEsp(Game *game, char **restrict args) {
 }
 
 void toggleNoBoom(Game *game, char **restrict args) {
-  char *NOP = "\x90\x90\x90\x90\x90\x89\x1C\x24";
-  char *REV = "\xE8\x46\x2B\xFF\xFF\x89\x1C\x24";
+  const char *NOP = "\x90\x90\x90\x90\x90\x89\x1C\x24";
+  const char *REV = "\xE8\x46\x2B\xFF\xFF\x89\x1C\x24";
 
   if (strstr(args[1], "on")) {
     pokeAddr(game->pid, game->clientModule + game->Offsets.BoomAddr, NOP, 7);
     puts("Turned on no-boom");
+    return;
   }
 
   pokeAddr(game->pid, game->clientModule + game->Offsets.BoomAddr, REV, 7);
