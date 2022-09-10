@@ -15,7 +15,7 @@
 #include <sys/ptrace.h>
 #include <sys/wait.h>
 
-void moduleAddr(pid_t pid, char *lib, int32_t *start, int32_t *end) {
+void moduleAddr(pid_t pid, char *lib, u_int32_t *start, u_int32_t *end) {
   char fileName[FILENAME_MAX];
   char buf[248], libName[64], rwxp[4];
   FILE *f;
@@ -42,7 +42,7 @@ void moduleAddr(pid_t pid, char *lib, int32_t *start, int32_t *end) {
 }
 
 /* Unsafe (Detectable) write func, write instructions */
-char pokeAddr(pid_t pid, int32_t addr, char *buf, size_t size) {
+char pokeAddr(pid_t pid, u_int32_t addr, char *buf, size_t size) {
   int i = 0, j = size / sizeof(long);
   pokeData data;
 
@@ -83,25 +83,29 @@ char readAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
 }
 
 /* Scan for a signature through a memory region to get an address */
-/* @TODO: if issues arise, add wildcard */
-off_t ScanAddr(int32_t start, int32_t end, const char *sig) {
+u_int32_t ScanAddr(u_int32_t start, u_int32_t end, char *sig, char *mask,
+                   size_t size) {
+  size_t i;
   pokeData data;
 
   while (start < end) {
     data.val = start;
-    if (data.chars[0] == sig[0] && memcmp(data.chars, sig, strlen(sig)) == 1)
-      break;
+    for (i = 0; i < size; i++) {
+      if (mask[i] != '?' && sig[i] != data.chars[i])
+        break;
+    }
+
+    if (i == size)
+      return start;
 
     start++;
   }
 
-  if ((end - 1) == start)
-    return 0;
-
-  return start;
+  return -1;
 }
 
 /* Safe write func, write values */
+/* @TODO: replace lseek64 */
 char writeAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
   int f, ret;
   char fileName[FILENAME_MAX];

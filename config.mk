@@ -3,15 +3,13 @@
 # Licensed under GPL version 3 or later.
 # See LICENSE for copyright information.
 
-# -pedantic (Has issues with the player struct having a 0 length array)
-
 CC = cc
 
 TARGET  = L4D2Cheat
 VERSION = $(shell head -n 1 VERSION)
 
 LDFLAGS = -pthread
-CFLAGS  = -ansi \
+CFLAGS  = -std=c99 \
           -m32 \
           -Wall \
           -Wextra \

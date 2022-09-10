@@ -13,7 +13,7 @@
 #include <string.h>
 #include <unistd.h>
 
-static int fd;
+static int keyfd;
 static int uinputfd;
 struct Key KeyList[MAX_KEY_SIZE];
 
@@ -21,7 +21,7 @@ struct Key KeyList[MAX_KEY_SIZE];
 void closeKeyboard(void) {
   ioctl(uinputfd, UI_DEV_DESTROY);
   close(uinputfd);
-  close(fd);
+  close(keyfd);
 }
 
 /* Finds a /dev/input device */
@@ -51,7 +51,7 @@ void openKeyboard(void) {
   fclose(f);
 
   sprintf(fileName, "/dev/input/%s", eventName);
-  if ((fd = open(fileName, O_RDONLY | O_NONBLOCK)) == -1)
+  if ((keyfd = open(fileName, O_RDONLY | O_NONBLOCK)) == -1)
     die("Could not open the input device");
 }
 
@@ -81,7 +81,7 @@ void manageInput(void) {
   struct input_event ie;
   int bytes;
 
-  if ((bytes = read(fd, &ie, sizeof(ie))) < 1 && ie.type != EV_KEY)
+  if ((bytes = read(keyfd, &ie, sizeof(ie))) < 1 && ie.type != EV_KEY)
     return;
 
   if (KeyList[ie.code].exists == 0) {

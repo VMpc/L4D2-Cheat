@@ -10,22 +10,7 @@
 
 #include <dirent.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
-/* Check if the game is running */
-char checkGame(pid_t pid) {
-  char fileName[FILENAME_MAX];
-  DIR *dir;
-
-  sprintf(fileName, "/proc/%d", pid);
-  if ((dir = opendir(fileName)) != NULL) {
-    closedir(dir);
-    return 0;
-  }
-
-  return -1;
-}
 
 /* Sleep in microseconds */
 void doSleep(int ms) {

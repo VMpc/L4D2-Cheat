@@ -18,8 +18,6 @@
 
 /* Functions */
 
-char checkGame(pid_t);
-
 void doSleep(int);
 
 pid_t findPid(char *);
