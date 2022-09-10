@@ -30,11 +30,11 @@ void toggleNoBoom(Game *game, char **restrict args) {
   const char *REV = "\xE8\x46\x2B\xFF\xFF\x89\x1C\x24";
 
   if (strstr(args[1], "on")) {
-    pokeAddr(game->pid, game->clientModule + game->Offsets.BoomAddr, NOP, 7);
+    pokeAddr(game->pid, game->clientModule + game->Offsets.BoomAddr, NOP, 8);
     puts("Turned on no-boom");
     return;
   }
 
-  pokeAddr(game->pid, game->clientModule + game->Offsets.BoomAddr, REV, 7);
+  pokeAddr(game->pid, game->clientModule + game->Offsets.BoomAddr, REV, 8);
   puts("Turned off no-boom");
 }
