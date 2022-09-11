@@ -96,14 +96,14 @@ void manageInput(void) {
 }
 
 /* Send a keyboard event with a specified type */
-static void sendEvent(int type, int code, int val) {
+static int sendEvent(int type, int code, int val) {
   struct input_event ie;
 
   ie.type = type;
   ie.code = code;
   ie.value = val;
 
-  write(uinputfd, &ie, sizeof(ie));
+  return write(uinputfd, &ie, sizeof(ie));
 }
 
 /* Send then release a key */

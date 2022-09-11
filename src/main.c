@@ -40,14 +40,12 @@ int main(void) {
 static void initCommands(void) {
   char *line = NULL;
 
-  addCommand("glow", 1, toggleEsp);
-  addCommand("noboom", 1, toggleNoBoom);
-
   while (1) {
     printf("> ");
     line = getLine(line);
-    splitArguments(&game, line);
+    executeCommand(&game, line);
   }
+
   free(line);
 }
 
@@ -64,13 +62,13 @@ static void *mainThread(void *_) {
     if (playerFound(&game) == -1)
       continue;
 
-    if (KeyList[KEY_UP].Value == 1 && !game.doBhop)
-      game.doBhop = 1;
+    if (KeyList[KEY_UP].Value == 1 && !game.Bhop)
+      game.Bhop = 1;
 
-    else if (KeyList[KEY_DOWN].Value == 1 && game.doBhop)
-      game.doBhop = 0;
+    else if (KeyList[KEY_DOWN].Value == 1 && game.Bhop)
+      game.Bhop = 0;
 
-    if (!game.doBhop)
+    if (!game.Bhop)
       continue;
 
     if (game.Player.FFlags == 131 || game.Player.FFlags == 643)

@@ -9,20 +9,14 @@
 
 #include "game.h"
 
-#define MAX_COMMANDS 50
-
 typedef void (*cmdfunc)(Game *, char **restrict);
-
 typedef struct {
-  char *name;
-  int8_t argCount;
+  const char *name;
   cmdfunc func;
 } Command;
 
-void addCommand(char *restrict, int8_t, cmdfunc);
+void executeCommand(Game *, char *restrict);
 
-void executeCommand(Game *, char **, int8_t);
-
-void splitArguments(Game *, char *);
+char **splitArguments(char[]);
 
 #endif /* _HANDLER_H */

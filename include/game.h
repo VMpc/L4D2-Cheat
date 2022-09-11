@@ -34,7 +34,7 @@ typedef struct {
   Offsets Offsets; /* Game offsets */
   Player Player;   /* The player struct */
 
-  char doBhop; /* this should be in it's own "options" struct */
+  char Bhop; /* this should be in it's own "options" struct */
 } Game;
 
 char checkGame(pid_t);

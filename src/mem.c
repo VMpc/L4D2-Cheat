@@ -76,7 +76,7 @@ char readAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
     return -1;
 
   if ((ret = lseek64(f, addr, SEEK_SET)) != -1)
-    read(f, buf, size);
+    ret = read(f, buf, size);
 
   close(f);
   return ret;
@@ -116,7 +116,7 @@ char writeAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
     return -1;
 
   if ((ret = lseek64(f, addr, SEEK_SET)) != -1)
-    write(f, buf, size);
+    ret = write(f, buf, size);
 
   close(f);
   return ret;

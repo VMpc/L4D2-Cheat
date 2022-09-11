@@ -40,12 +40,10 @@ pid_t findPid(char *name) {
     if ((f = fopen(fileName, "r")) == NULL)
       continue;
 
-    fgets(fileContent, sizeof(fileContent), f);
-    fclose(f);
-
-    if (strstr(fileContent, name))
+    if (fgets(fileContent, sizeof(fileContent), f) && strstr(fileContent, name))
       break;
 
+    fclose(f);
     pid = -1;
   }
 

@@ -10,8 +10,11 @@ VERSION = $(shell head -n 1 VERSION)
 
 LDFLAGS = -pthread
 CFLAGS  = -std=c99 \
+          -O3 \
+          -Os \
           -m32 \
           -Wall \
+          -Werror \
           -Wextra \
           -Wno-deprecated-declarations \
           -Wmissing-prototypes \
