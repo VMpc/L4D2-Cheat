@@ -7,17 +7,14 @@
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
-#define MAX_KEY_SIZE 144
-
 /* Structs */
-typedef struct Key {
+typedef struct {
   char exists;
   char Value;
-} KeyS;
-extern struct Key KeyList[MAX_KEY_SIZE];
+} KeyStruct;
 
 /* Funcs */
-void closeKeyboard(void);
+char checkKey(int key);
 
 void openKeyboard(void);
 

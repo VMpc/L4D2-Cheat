@@ -6,7 +6,6 @@
 
 #include "../include/handler.h"
 #include "../include/commands.h"
-#include "../include/game.h"
 
 #include <stdio.h>
 #include <stdlib.h>

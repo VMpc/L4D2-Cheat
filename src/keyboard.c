@@ -11,17 +11,15 @@
 #include <linux/uinput.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 static int keyfd;
 static int uinputfd;
-struct Key KeyList[MAX_KEY_SIZE];
+KeyStruct KeyList[144];
 
-/* Frees the virtual keyboard */
-void closeKeyboard(void) {
-  ioctl(uinputfd, UI_DEV_DESTROY);
-  close(uinputfd);
-  close(keyfd);
+char checkKey(int key) {
+    return KeyList[key].Value;
 }
 
 /* Finds a /dev/input device */
@@ -67,10 +65,10 @@ void openUinputKeyboard(void) {
   ioctl(uinputfd, UI_SET_KEYBIT, KEY_SPACE);
 
   usetup.id.bustype = BUS_USB;
-  usetup.id.vendor = 0x1234;
-  usetup.id.product = 0x5678;
+  usetup.id.vendor = 0x046d;
+  usetup.id.product = 0xc53d;
 
-  strcpy(usetup.name, "We are not cheating!");
+  strcpy(usetup.name, "Logitech USB Receiver");
 
   ioctl(uinputfd, UI_DEV_SETUP, &usetup);
   ioctl(uinputfd, UI_DEV_CREATE);
@@ -85,7 +83,7 @@ void manageInput(void) {
     return;
 
   if (KeyList[ie.code].exists == 0) {
-    KeyS key;
+    KeyStruct key;
     key.exists = 1;
     key.Value = ie.value;
     KeyList[ie.code] = key;

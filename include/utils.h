@@ -7,7 +7,6 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
-#include <stdlib.h>
 #include <sys/types.h>
 
 #define die(str)                                                               \
