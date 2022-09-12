@@ -20,7 +20,7 @@ static Game game;
 
 int main(void) {
   pthread_t threadID;
-  char *line = NULL;
+  char str[1024];
 
   if (getuid() != 0)
     die("You must run this program as root");
@@ -31,8 +31,9 @@ int main(void) {
 
   while (1) {
     printf("> ");
-    line = getLine(line);
-    executeCommand(&game, line);
+
+    if (fgets(str, 1024, stdin))
+      executeCommand(&game, str);
   }
 }
 

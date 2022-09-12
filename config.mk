@@ -3,23 +3,42 @@
 # Licensed under GPL version 3 or later.
 # See LICENSE for copyright information.
 
-CC = cc
+CC ?= cc
 
-TARGET  = L4D2Cheat
-VERSION = $(shell head -n 1 VERSION)
+TARGET  := L4D2Cheat
+VERSION := $(shell head -n 1 VERSION)
 
-LDFLAGS = -pthread
-CFLAGS  = -std=c99 \
-          -O3 \
-          -m32 \
-          -Wall \
-          -Werror \
-          -Wextra \
-          -Wno-deprecated-declarations \
-          -Wmissing-prototypes \
-          -Wold-style-definition \
-          -Iinclude \
-          -DVERSION=\"$(VERSION)\"
+DIR     ?= /usr/local/sbin
 
-SRC = src/commands.c src/game.c src/handler.c src/keyboard.c src/main.c src/mem.c src/utils.c
-OBJ = $(SRC:.c=.o)
+ifeq ($(RELEASE),1)
+  CPPFLAGS := -DNDEBUG
+endif
+
+ifeq ($(DEBUG),1)
+  CFLAGS := -O0 -g
+else
+  CFLAGS := -O3
+endif
+
+LDFLAGS  := -lpthread
+CPPFLAGS += -DVERSION=\"$(VERSION)\"
+CFLAGS   += -std=c99 \
+            -m32 \
+            -Wall \
+            -Werror \
+            -Wextra \
+            -Wno-deprecated-declarations \
+            -Wmissing-prototypes \
+            -Wold-style-definition \
+            -Iinclude \
+            $(CPPFLAGS)
+
+SRC := src/commands.c \
+       src/game.c \
+       src/handler.c \
+       src/keyboard.c \
+       src/main.c \
+       src/mem.c \
+       src/utils.c
+
+OBJ := $(SRC:.c=.o)

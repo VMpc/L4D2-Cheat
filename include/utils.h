@@ -21,6 +21,4 @@ void doSleep(int);
 
 pid_t findPid(char *);
 
-char *getLine(char *);
-
 #endif /* _UTILS_H */

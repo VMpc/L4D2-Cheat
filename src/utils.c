@@ -51,34 +51,3 @@ pid_t findPid(char *name) {
   closedir(dir);
   return pid;
 }
-
-/* Reads data from stdin until a new line */
-char *getLine(char *line) {
-  char c;
-  size_t maxSize = 0;
-  size_t length = 0;
-  char *tempStr = NULL;
-
-  while (((c = getchar()) != '\n') && (c != EOF)) {
-    if ((length + 1) >= maxSize) {
-      maxSize = (maxSize == 0) ? 2 : maxSize * 2;
-
-      if ((tempStr = realloc(line, maxSize * sizeof(char))) == NULL)
-        return line;
-
-      line = tempStr;
-    }
-
-    line[length] = (char)c;
-    length++;
-  }
-
-  line[length + 1] = '\0';
-
-  if ((tempStr = realloc(line, (length + 1) * sizeof(char))) == NULL)
-    return line;
-
-  line = tempStr;
-
-  return line;
-}

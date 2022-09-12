@@ -1,4 +1,4 @@
-# makefile
+# Makefile
 #
 # Licensed under GPL version 3 or later.
 # See LICENSE for copyright information.
@@ -11,7 +11,15 @@ all: $(TARGET)
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+
+
+install: all
+	mkdir -p $(DIR)
+	cp -f $(TARGET) $(DIR)/$(TARGET)
+	chmod 755 $(DIR)/$(TARGET)
+
+uninstall:
+	@rm -vf $(DIR)/$(TARGET)
 
 clean:
 	@rm -vf $(OBJ) $(TARGET)
