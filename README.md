@@ -49,8 +49,6 @@ Add CC='cc' to change the compiler.
 
 Add DIR='/usr/local/sbin' to change the install location. (uninstall must use the same thing)
 
-
-
 ## Thanks to
 - [Helped with offsets](https://github.com/StrafeTx)
 - [Moral support / Helped figure out the hellscape of ptrace](https://github.com/StrafeReaver)

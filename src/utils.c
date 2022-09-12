@@ -4,8 +4,6 @@
  * See LICENSE for copyright information.
  */
 
-#define _GNU_SOURCE
-
 #include "utils.h"
 
 #include <dirent.h>
@@ -13,13 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Sleep in microseconds */
-void doSleep(int ms) {
-  struct timeval tv;
-  tv.tv_sec = 0;
-  tv.tv_usec = ms;
-
-  select(0, NULL, NULL, NULL, &tv);
+void die(char *str) {
+  puts(str);
+  exit(1);
 }
 
 /* find the PID of a running process */
@@ -28,7 +22,7 @@ pid_t findPid(char *name) {
   DIR *dir;
   pid_t pid;
   struct dirent *de;
-  char fileName[FILENAME_MAX], fileContent[150];
+  char fileName[FILENAME_MAX], buf[256];
 
   if ((dir = opendir("/proc")) == NULL)
     die("Could not open /proc directory");
@@ -41,7 +35,7 @@ pid_t findPid(char *name) {
     if ((f = fopen(fileName, "r")) == NULL)
       continue;
 
-    if (fgets(fileContent, sizeof(fileContent), f) && strstr(fileContent, name))
+    if (fgets(buf, sizeof(buf), f) && strstr(buf, name))
       break;
 
     fclose(f);

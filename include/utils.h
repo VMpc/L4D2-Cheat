@@ -9,16 +9,9 @@
 
 #include <sys/types.h>
 
-#define die(str)                                                               \
-  do {                                                                         \
-    puts(str);                                                                 \
-    exit(1);                                                                   \
-  } while (0)
-
 /* Functions */
 
-void doSleep(int);
-
+void die(char *);
 pid_t findPid(char *);
 
 #endif /* _UTILS_H */

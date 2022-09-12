@@ -11,29 +11,26 @@
 #include <linux/uinput.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <unistd.h>
 
 static int keyfd;
 static int uinputfd;
-Key KeyList[144];
+static Key KeyList[144];
 
-char checkKey(int key) {
-    return KeyList[key].Value;
-}
+char checkKey(int key) { return KeyList[key].Value; }
 
 /* Finds a /dev/input device */
 void openKeyboard(void) {
+  char eventName[9], lineBuf[1024];
+  char fileName[FILENAME_MAX] = "/dev/input/";
+  char *ptr;
+  char *ptr2;
   FILE *f;
-  char eventName[9], fileName[FILENAME_MAX], lineBuf[1024];
 
   if ((f = fopen("/proc/bus/input/devices", "r")) == NULL)
     die("Could not open /proc/bus/input/devices");
 
   while (fgets(lineBuf, sizeof(lineBuf), f)) {
-    char *ptr;
-    char *ptr2;
-
     if ((ptr = strstr(lineBuf, "Handlers="))) {
       ptr += strlen("Handlers=");
       if ((ptr = strstr(ptr, "event"))) {
@@ -48,7 +45,7 @@ void openKeyboard(void) {
 
   fclose(f);
 
-  sprintf(fileName, "/dev/input/%s", eventName);
+  strcat(fileName, eventName);
   if ((keyfd = open(fileName, O_RDONLY | O_NONBLOCK)) == -1)
     die("Could not open the input device");
 }

@@ -3,6 +3,7 @@
  * Licensed under GPL version 3 or later.
  * See LICENSE for copyright information.
  */
+#define _GNU_SOURCE
 
 #include "handler.h"
 #include "keyboard.h"
@@ -12,7 +13,6 @@
 #include <linux/input.h>
 #include <pthread.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 
 static void *mainThread(void *);
@@ -30,7 +30,7 @@ int main(void) {
   pthread_create(&threadID, NULL, mainThread, NULL);
 
   while (1) {
-    printf("> ");
+    fputs("> ", stdout);
 
     if (fgets(str, 1024, stdin))
       executeCommand(&game, str);
@@ -59,7 +59,7 @@ static void *mainThread(void *_) {
     if (game.Player.FFlags == 131 || game.Player.FFlags == 643)
       sendInput(KEY_SPACE);
 
-    doSleep(100);
+    usleep(100);
   }
 
   die("Game not running");
