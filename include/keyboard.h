@@ -11,7 +11,7 @@
 typedef struct {
   char exists;
   char Value;
-} KeyStruct;
+} Key;
 
 /* Funcs */
 char checkKey(int key);

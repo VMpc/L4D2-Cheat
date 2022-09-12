@@ -16,7 +16,7 @@
 
 static int keyfd;
 static int uinputfd;
-KeyStruct KeyList[144];
+Key KeyList[144];
 
 char checkKey(int key) {
     return KeyList[key].Value;
@@ -83,7 +83,7 @@ void manageInput(void) {
     return;
 
   if (KeyList[ie.code].exists == 0) {
-    KeyStruct key;
+    Key key;
     key.exists = 1;
     key.Value = ie.value;
     KeyList[ie.code] = key;
