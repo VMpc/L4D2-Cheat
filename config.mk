@@ -20,7 +20,7 @@ else
   CFLAGS := -O3
 endif
 
-LDFLAGS  := -lpthread
+LDFLAGS  := -pthread
 CPPFLAGS += -DVERSION=\"$(VERSION)\"
 CFLAGS   += -std=c99 \
             -m32 \
