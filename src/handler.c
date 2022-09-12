@@ -4,8 +4,8 @@
  * See LICENSE for copyright information.
  */
 
-#include "../include/handler.h"
-#include "../include/commands.h"
+#include "handler.h"
+#include "commands.h"
 
 #include <stdio.h>
 #include <stdlib.h>

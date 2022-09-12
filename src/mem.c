@@ -5,7 +5,7 @@
  */
 #define _GNU_SOURCE
 
-#include "../include/mem.h"
+#include "mem.h"
 
 #include <fcntl.h>
 #include <stdio.h>

@@ -4,8 +4,8 @@
  * See LICENSE for copyright information.
  */
 
-#include "../include/keyboard.h"
-#include "../include/utils.h"
+#include "keyboard.h"
+#include "utils.h"
 
 #include <fcntl.h>
 #include <linux/uinput.h>

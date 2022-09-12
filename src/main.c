@@ -4,10 +4,10 @@
  * See LICENSE for copyright information.
  */
 
-#include "../include/handler.h"
-#include "../include/keyboard.h"
-#include "../include/mem.h"
-#include "../include/utils.h"
+#include "handler.h"
+#include "keyboard.h"
+#include "mem.h"
+#include "utils.h"
 
 #include <linux/input.h>
 #include <pthread.h>

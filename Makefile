@@ -8,10 +8,10 @@ include config.mk
 all: $(TARGET)
 
 .c.o:
-	$(CC) -c $(CFLAGS) -o $@ $<
+	$(CC) -c $(CFLAGS) $(INC) -o $@ $<
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) $(INCS) $(OBJ) -o $@
 
 clean:
 	@rm -vf $(OBJ) $(TARGET)

@@ -4,8 +4,8 @@
  * See LICENSE for copyright information.
  */
 
-#include "../include/commands.h"
-#include "../include/mem.h"
+#include "commands.h"
+#include "mem.h"
 
 #include <stdio.h>
 #include <string.h>

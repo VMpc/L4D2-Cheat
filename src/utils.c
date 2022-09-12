@@ -6,7 +6,7 @@
 
 #define _GNU_SOURCE
 
-#include "../include/utils.h"
+#include "utils.h"
 
 #include <dirent.h>
 #include <stdio.h>
