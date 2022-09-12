@@ -39,5 +39,5 @@ sudo ./L4D2Cheat
 - URLNOTFOUND (A federal agent / Hated my code so much there was a patch file sent to fix it)
 
 # License
-L4D2-Cheat is licensed under GPL version 3, or later.
+L4D2-Cheat is licensed under GPL version 3 or later.
 See LICENSE for copyright information.
