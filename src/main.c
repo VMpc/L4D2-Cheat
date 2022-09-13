@@ -17,15 +17,15 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void handleInput(int);
-static void *mainThread(void *);
 static Game game;
-
 static Toggle Toggles[] = {
     {KEY_UP, 1, &toggleBhop},
     {KEY_DOWN, 0, &toggleBhop},
     {0, 0, NULL},
 };
+
+void handleInput(int);
+static void *mainThread(void *);
 
 int main(void) {
   pthread_t threadID;
