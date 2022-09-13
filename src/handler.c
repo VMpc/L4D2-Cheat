@@ -11,9 +11,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <linux/input.h>
+
+
 static Command commands[] = {
     {"glow", &toggleEsp},
     {"noboom", &toggleNoBoom},
+};
+
+static Toggle Toggles[] = {
+    {KEY_UP, 1, &toggleBhop},
+    {KEY_DOWN, 0, &toggleBhop},
+    {0, 0, NULL},
 };
 
 /* Checks & runs a command with the split arguments */
@@ -31,6 +40,19 @@ void executeCommand(Game *restrict game, char *restrict str) {
   
   free(args);
   puts("No command found");
+}
+
+void handleInput(Game *restrict game, int key) {
+  int i;
+
+  for (i = 0; Toggles[i].func != 0; i++) {
+    if (Toggles[i].Key == key) {
+      (*Toggles[i].func)(game, Toggles[i].Value);
+      return;
+    }
+  }
+
+  return;
 }
 
 /* Split stdin into a command + arguments */

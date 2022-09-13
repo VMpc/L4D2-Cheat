@@ -22,7 +22,9 @@ typedef struct {
   togglefunc func;
 } Toggle;
 
-void executeCommand(Game *, char *restrict);
+void executeCommand(Game *restrict, char *restrict);
+
+void handleInput(Game *restrict, int);
 
 char **splitArguments(char[]);
 

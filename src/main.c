@@ -18,13 +18,7 @@
 #include <unistd.h>
 
 static Game game;
-static Toggle Toggles[] = {
-    {KEY_UP, 1, &toggleBhop},
-    {KEY_DOWN, 0, &toggleBhop},
-    {0, 0, NULL},
-};
 
-void handleInput(int);
 static void *mainThread(void *);
 
 int main(void) {
@@ -46,19 +40,6 @@ int main(void) {
   }
 }
 
-void handleInput(int key) {
-  int i;
-
-  for (i = 0; Toggles[i].func != 0; i++) {
-    if (Toggles[i].Key == key) {
-      (*Toggles[i].func)(&game, Toggles[i].Value);
-      return;
-    }
-  }
-
-  return;
-}
-
 /* Main cheat thread */
 static void *mainThread(void *_) {
   (void)_; /* ignoring extra thread arg */
@@ -74,7 +55,7 @@ static void *mainThread(void *_) {
 
   while (checkGame(game.pid) != -1) {
     if ((key = getInput(keyF)) != -1)
-      handleInput(key);
+      handleInput(&game, key);
 
     if (playerFound(&game) == -1)
       continue;
