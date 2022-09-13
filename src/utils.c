@@ -22,7 +22,7 @@ pid_t findPid(char *name) {
   DIR *dir;
   pid_t pid;
   struct dirent *de;
-  char fileName[FILENAME_MAX], buf[256];
+  char fName[FILENAME_MAX], buf[256];
 
   if ((dir = opendir("/proc")) == NULL)
     die("Could not open /proc directory");
@@ -31,8 +31,8 @@ pid_t findPid(char *name) {
     if ((pid = atoi(de->d_name)) == 0)
       continue;
 
-    sprintf(fileName, "/proc/%d/cmdline", pid);
-    if ((f = fopen(fileName, "r")) == NULL)
+    sprintf(fName, "/proc/%d/cmdline", pid);
+    if ((f = fopen(fName, "r")) == NULL)
       continue;
 
     if (fgets(buf, sizeof(buf), f) && strstr(buf, name))

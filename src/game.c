@@ -18,10 +18,10 @@
 
 /* Check if the game is running */
 char checkGame(pid_t pid) {
-  char fileName[FILENAME_MAX];
+  char fName[FILENAME_MAX];
 
-  sprintf(fileName, "/proc/%d/maps", pid);
-  return access(fileName, R_OK);
+  sprintf(fName, "/proc/%d/maps", pid);
+  return access(fName, R_OK);
 }
 
 /* Initalizes the cheat */

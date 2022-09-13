@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <linux/uinput.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -21,32 +22,32 @@ char checkKey(int key) { return KeyList[key].Value == 1; }
 
 /* Finds a /dev/input device */
 void openKeyboard(void) {
-  char eventName[9], lineBuf[1024];
-  char fileName[FILENAME_MAX] = "/dev/input/";
-  char *ptr;
-  char *ptr2;
   FILE *f;
+  char buf[1024], evName[32];
+  char fName[FILENAME_MAX] = "/dev/input/";
+  char *ptr;
 
   if ((f = fopen("/proc/bus/input/devices", "r")) == NULL)
     die("Could not open /proc/bus/input/devices");
 
-  while (fgets(lineBuf, sizeof(lineBuf), f)) {
-    if ((ptr = strstr(lineBuf, "Handlers="))) {
-      ptr += strlen("Handlers=");
-      if ((ptr = strstr(ptr, "event"))) {
-        if ((ptr2 = strchr(ptr, ' ')))
-          *ptr2 = '\0';
-        sprintf(eventName, "%s", ptr);
-      }
+  while (fgets(buf, sizeof(buf), f)) {
+    if ((ptr = strstr(buf, "Handlers="))) {
+      ptr += 9;
+      if ((ptr = strstr(buf, "event")))
+        ptr = strtok(ptr, " ");
+
+      sprintf(evName, "%s", ptr);
     }
-    if (strstr(lineBuf, "EV=120013"))
+
+    if (strstr(buf, "EV=120013")) {
+      free(ptr);
       break;
+    }
   }
 
   fclose(f);
-
-  strcat(fileName, eventName);
-  if ((keyfd = open(fileName, O_RDONLY | O_NONBLOCK)) == -1)
+  strcat(fName, evName);
+  if ((keyfd = open(fName, O_RDONLY | O_NONBLOCK)) == -1)
     die("Could not open the input device");
 }
 

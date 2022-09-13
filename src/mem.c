@@ -15,20 +15,21 @@
 #include <sys/ptrace.h>
 #include <sys/wait.h>
 
+/* Grabs a memory range of a module */
 void moduleAddr(pid_t pid, char *lib, u_int32_t *start, u_int32_t *end) {
-  char fileName[FILENAME_MAX];
-  char buf[248], libName[64], rwxp[4];
+  char fName[FILENAME_MAX];
+  char buf[248], lName[64], rwxp[4];
   FILE *f;
 
-  sprintf(fileName, "/proc/%d/maps", pid);
+  sprintf(fName, "/proc/%d/maps", pid);
   if (lib)
-    sprintf(libName, "%s", lib);
+    sprintf(lName, "%s", lib);
 
-  if ((f = fopen(fileName, "r")) == NULL)
+  if ((f = fopen(fName, "r")) == NULL)
     return;
 
   while (fgets(buf, sizeof(buf), f)) {
-    if (lib && !strstr(buf, libName))
+    if (lib && !strstr(buf, lName))
       continue;
 
     sscanf(buf, "%lx-%lx %s", (unsigned long *)start, (unsigned long *)end,
@@ -68,11 +69,11 @@ char pokeAddr(pid_t pid, u_int32_t addr, const char *buf, size_t size) {
 char readAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
   int f;
   int8_t ret;
-  char fileName[FILENAME_MAX];
+  char fName[FILENAME_MAX];
 
-  sprintf(fileName, "/proc/%d/mem", pid);
+  sprintf(fName, "/proc/%d/mem", pid);
 
-  if ((f = open(fileName, O_RDONLY)) == -1)
+  if ((f = open(fName, O_RDONLY)) == -1)
     return -1;
 
   if ((ret = lseek64(f, addr, SEEK_SET)) != -1)
@@ -108,11 +109,11 @@ u_int32_t ScanAddr(u_int32_t start, u_int32_t end, char *sig, char *mask,
 /* @TODO: replace lseek64 */
 char writeAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
   int f, ret;
-  char fileName[FILENAME_MAX];
+  char fName[FILENAME_MAX];
 
-  sprintf(fileName, "/proc/%d/mem", pid);
+  sprintf(fName, "/proc/%d/mem", pid);
 
-  if ((f = open(fileName, O_WRONLY)) == -1)
+  if ((f = open(fName, O_WRONLY)) == -1)
     return -1;
 
   if ((ret = lseek64(f, addr, SEEK_SET)) != -1)
