@@ -63,4 +63,5 @@ static void *mainThread(void *_) {
   }
 
   die("Game not running");
+  return NULL;
 }
