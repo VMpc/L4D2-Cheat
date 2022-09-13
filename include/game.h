@@ -15,12 +15,14 @@ typedef struct {
   u_int32_t BoomAddr;
 } Offsets;
 
+/* TODO: dump this entire struct (and structs related to it) */
 typedef struct {
-  char _1[0xDC]; /* 0xDC */
-  int Health;    /* Health (0xEC on windows) */
+  char unk210[210]; /* skip the first 210 elements of the struct */
+  char *m_target;
+  int m_iMaxHealth;
+  int m_iHealth;
 
-  char _2[0x0]; /* 0xE0 */
-  int FFlags;   /* Crouch flag (0xF0 on windows) */
+  int m_fFlags;
 
   u_int32_t Address; /* The ASLR bypassed address of the LocalPlayer */
 } Player;

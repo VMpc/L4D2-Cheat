@@ -52,7 +52,8 @@ static void *mainThread(void *_) {
     else if (checkKey(KEY_DOWN) && game.Bhop)
       game.Bhop = 0;
 
-    if (game.Bhop && (game.Player.FFlags == 131 || game.Player.FFlags == 643))
+    if (game.Bhop &&
+        (game.Player.m_fFlags == 131 || game.Player.m_fFlags == 643))
       sendInput(KEY_SPACE);
 
     usleep(100);

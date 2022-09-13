@@ -24,6 +24,7 @@ LDFLAGS  := -pthread
 CPPFLAGS += -DVERSION=\"$(VERSION)\"
 CFLAGS   += -std=c99 \
             -m32 \
+            -pedantic \
             -Wall \
             -Werror \
             -Wextra \

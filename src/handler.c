@@ -22,8 +22,10 @@ void executeCommand(Game *restrict game, char *restrict str) {
   char **args = splitArguments(str);
 
   while (commands[i].func != 0) {
-    if (!strcmp(commands[i].name, args[0]))
-      return (*commands[i].func)(game, args);
+    if (!strcmp(commands[i].name, args[0])) {
+      (*commands[i].func)(game, args);
+      return;
+    }
     i++;
   }
 
