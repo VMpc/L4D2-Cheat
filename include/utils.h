@@ -9,9 +9,8 @@
 
 #include <sys/types.h>
 
-/* Functions */
-
 void die(char *);
+
 pid_t findPid(char *);
 
 #endif /* _UTILS_H */

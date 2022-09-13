@@ -9,13 +9,11 @@
 
 #include <sys/types.h>
 
-/* Structs */
 typedef union {
   long val;
   char chars[sizeof(long)];
 } pokeData;
 
-/* Functions */
 void moduleAddr(pid_t pid, char *lib, u_int32_t *, u_int32_t *);
 
 char pokeAddr(pid_t, u_int32_t, const char *, size_t);

@@ -10,6 +10,7 @@
 #include "game.h"
 
 void toggleEsp(Game *, char **restrict);
+
 void toggleNoBoom(Game *, char **restrict);
 
 #endif /* _COMMANDS_H */

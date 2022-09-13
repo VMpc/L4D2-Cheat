@@ -17,7 +17,7 @@ static int keyfd;
 static int uinputfd;
 static Key KeyList[144];
 
-char checkKey(int key) { return KeyList[key].Value; }
+char checkKey(int key) { return KeyList[key].Value == 1; }
 
 /* Finds a /dev/input device */
 void openKeyboard(void) {

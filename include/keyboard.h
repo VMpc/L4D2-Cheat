@@ -7,13 +7,11 @@
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
-/* Structs */
 typedef struct {
   char exists;
   char Value;
 } Key;
 
-/* Funcs */
 char checkKey(int key);
 
 void openKeyboard(void);

@@ -47,16 +47,12 @@ static void *mainThread(void *_) {
     if (playerFound(&game) == -1)
       continue;
 
-    if (checkKey(KEY_UP) == 1 && !game.Bhop)
+    if (checkKey(KEY_UP) && !game.Bhop)
       game.Bhop = 1;
-
-    else if (checkKey(KEY_DOWN) == 1 && game.Bhop)
+    else if (checkKey(KEY_DOWN) && game.Bhop)
       game.Bhop = 0;
 
-    if (!game.Bhop)
-      continue;
-
-    if (game.Player.FFlags == 131 || game.Player.FFlags == 643)
+    if (game.Bhop && (game.Player.FFlags == 131 || game.Player.FFlags == 643))
       sendInput(KEY_SPACE);
 
     usleep(100);
