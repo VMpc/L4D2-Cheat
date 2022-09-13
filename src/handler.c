@@ -24,11 +24,13 @@ void executeCommand(Game *restrict game, char *restrict str) {
   while (commands[i].func != 0) {
     if (!strcmp(commands[i].name, args[0])) {
       (*commands[i].func)(game, args);
+      free(args);
       return;
     }
     i++;
   }
-
+  
+  free(args);
   puts("No command found");
 }
 
