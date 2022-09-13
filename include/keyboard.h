@@ -7,19 +7,14 @@
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
-typedef struct {
-  char exists;
-  char Value;
-} Key;
+#include "game.h"
 
-char checkKey(int key);
+int getInput(int);
 
-void openKeyboard(void);
+int openKeyboard(void);
 
-void openUinputKeyboard(void);
+int openUinputKeyboard(void);
 
-void manageInput(void);
-
-void sendInput(int);
+void sendInput(int, int);
 
 #endif /* _KEYBOARD_H */

@@ -8,20 +8,29 @@
 #include "utils.h"
 
 #include <fcntl.h>
+
 #include <linux/uinput.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-static int keyfd;
-static int uinputfd;
-static Key KeyList[144];
+/* Handles KEYPRESS and KEYRELEASE events */
+int getInput(int keyFile) {
+  struct input_event ie;
+  
+  if (read(keyFile, &ie, sizeof(ie)) == -1)
+    return -1;
 
-char checkKey(int key) { return KeyList[key].Value == 1; }
+  if (ie.type != EV_KEY || ie.value != 1)
+    return -1;
+
+  return ie.code;
+}
 
 /* Finds a /dev/input device */
-void openKeyboard(void) {
+int openKeyboard(void) {
   FILE *f;
   char buf[1024], evName[32];
   char fName[FILENAME_MAX] = "/dev/input/";
@@ -47,20 +56,21 @@ void openKeyboard(void) {
 
   fclose(f);
   strcat(fName, evName);
-  if ((keyfd = open(fName, O_RDONLY | O_NONBLOCK)) == -1)
-    die("Could not open the input device");
+
+  return open(fName, O_RDONLY | O_NONBLOCK);
 }
 
 /* Creates a virtual device */
 /* @TODO Support Alpine Linux */
-void openUinputKeyboard(void) {
+int openUinputKeyboard(void) {
   struct uinput_setup usetup = {0};
+  int uinputF = -1;
 
-  if ((uinputfd = open("/dev/uinput", O_WRONLY | O_NONBLOCK)) == -1)
-    die("Could not open /dev/uinput");
+  if ((uinputF = open("/dev/uinput", O_WRONLY | O_NONBLOCK)) == -1)
+    return uinputF;
 
-  ioctl(uinputfd, UI_SET_EVBIT, EV_KEY);
-  ioctl(uinputfd, UI_SET_KEYBIT, KEY_SPACE);
+  ioctl(uinputF, UI_SET_EVBIT, EV_KEY);
+  ioctl(uinputF, UI_SET_KEYBIT, KEY_SPACE);
 
   usetup.id.bustype = BUS_USB;
   usetup.id.vendor = 0x046d;
@@ -68,44 +78,27 @@ void openUinputKeyboard(void) {
 
   strcpy(usetup.name, "Logitech USB Receiver");
 
-  ioctl(uinputfd, UI_DEV_SETUP, &usetup);
-  ioctl(uinputfd, UI_DEV_CREATE);
-}
+  ioctl(uinputF, UI_DEV_SETUP, &usetup);
+  ioctl(uinputF, UI_DEV_CREATE);
 
-/* Handles KEYPRESS and KEYRELEASE events */
-void manageInput(void) {
-  struct input_event ie;
-  int bytes;
-
-  if ((bytes = read(keyfd, &ie, sizeof(ie))) < 1 && ie.type != EV_KEY)
-    return;
-
-  if (KeyList[ie.code].exists == 0) {
-    Key key;
-    key.exists = 1;
-    key.Value = ie.value;
-    KeyList[ie.code] = key;
-    return;
-  }
-
-  KeyList[ie.code].Value = ie.value;
+  return uinputF;
 }
 
 /* Send a keyboard event with a specified type */
-static int sendEvent(int type, int code, int val) {
+static int sendEvent(int keyFile, int type, int code, int val) {
   struct input_event ie;
 
   ie.type = type;
   ie.code = code;
   ie.value = val;
 
-  return write(uinputfd, &ie, sizeof(ie));
+  return write(keyFile, &ie, sizeof(ie));
 }
 
 /* Send then release a key */
-void sendInput(int keyCode) {
-  sendEvent(EV_KEY, keyCode, 1);
-  sendEvent(EV_SYN, SYN_REPORT, 0);
-  sendEvent(EV_KEY, keyCode, 0);
-  sendEvent(EV_SYN, SYN_REPORT, 0);
+void sendInput(int keyFile, int keyCode) {
+  sendEvent(keyFile, EV_KEY, keyCode, 1);
+  sendEvent(keyFile, EV_SYN, SYN_REPORT, 0);
+  sendEvent(keyFile, EV_KEY, keyCode, 0);
+  sendEvent(keyFile, EV_SYN, SYN_REPORT, 0);
 }

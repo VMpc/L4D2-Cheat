@@ -9,6 +9,8 @@
 
 #include "game.h"
 
+void toggleBhop(Game *, char);
+
 void toggleEsp(Game *, char **restrict);
 
 void toggleNoBoom(Game *, char **restrict);

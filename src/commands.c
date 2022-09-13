@@ -10,6 +10,10 @@
 #include <stdio.h>
 #include <string.h>
 
+void toggleBhop(Game *game, char bool) {
+  game->Bhop = bool;
+}
+
 void toggleEsp(Game *game, char **restrict args) {
   const char *NOP = "\x90\x90\x90\x90\x90\x90\xFF";
   const char *REV = "\x0F\x83\xD1\x01\x00\x00\xFF";

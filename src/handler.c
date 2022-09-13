@@ -11,23 +11,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-Command commands[] = {
+static Command commands[] = {
     {"glow", &toggleEsp},
     {"noboom", &toggleNoBoom},
 };
 
 /* Checks & runs a command with the split arguments */
 void executeCommand(Game *restrict game, char *restrict str) {
-  int i = 0;
+  int i;
   char **args = splitArguments(str);
 
-  while (commands[i].func != 0) {
+  for (i = 0; commands[i].func != 0; i++) {
     if (!strcmp(commands[i].name, args[0])) {
       (*commands[i].func)(game, args);
       free(args);
       return;
     }
-    i++;
   }
   
   free(args);

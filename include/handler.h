@@ -15,6 +15,13 @@ typedef struct {
   cmdfunc func;
 } Command;
 
+typedef void (*togglefunc)(Game *, char);
+typedef struct {
+  int Key;
+  char Value;
+  togglefunc func;
+} Toggle;
+
 void executeCommand(Game *, char *restrict);
 
 char **splitArguments(char[]);

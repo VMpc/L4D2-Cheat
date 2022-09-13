@@ -5,7 +5,6 @@
  */
 
 #include "game.h"
-#include "keyboard.h"
 #include "mem.h"
 #include "utils.h"
 
@@ -33,9 +32,6 @@ void openGame(Game *game, char *name) {
              &game->clientModuleEnd);
   if ((game->clientModule + game->clientModuleEnd) == 0)
     die("Could not get the client.so module\n");
-
-  openKeyboard();
-  openUinputKeyboard();
 
   printf("Version (%s) of the cheat has loaded\n%s -> PID: %d\nclient.so -> "
          "(%x-%x)\n",

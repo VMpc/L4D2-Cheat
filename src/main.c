@@ -5,18 +5,27 @@
  */
 #define _GNU_SOURCE
 
+#include "commands.h"
 #include "handler.h"
 #include "keyboard.h"
 #include "mem.h"
 #include "utils.h"
 
 #include <linux/input.h>
+
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
 
+void handleInput(int);
 static void *mainThread(void *);
 static Game game;
+
+Toggle Toggles[] = {
+    {KEY_UP, 1, &toggleBhop},
+    {KEY_DOWN, 0, &toggleBhop},
+    {0, 0, NULL},
+};
 
 int main(void) {
   pthread_t threadID;
@@ -37,24 +46,42 @@ int main(void) {
   }
 }
 
+void handleInput(int key) {
+  int i;
+
+  for (i = 0; Toggles[i].func != 0; i++) {
+    if (Toggles[i].Key == key) {
+      (*Toggles[i].func)(&game, Toggles[i].Value);
+      return;
+    }
+  }
+
+  return;
+}
+
 /* Main cheat thread */
 static void *mainThread(void *_) {
   (void)_; /* ignoring extra thread arg */
+  int key;
+  int keyF;
+  int UinputF;
+  
+  if ((keyF = openKeyboard()) == -1)
+    die("Could not open the input device");
+
+  if ((UinputF = openUinputKeyboard()) == -1)
+    die("Could not open /dev/uinput");
 
   while (checkGame(game.pid) != -1) {
-    manageInput();
+    if ((key = getInput(keyF)) != -1)
+      handleInput(key);
 
     if (playerFound(&game) == -1)
       continue;
 
-    if (checkKey(KEY_UP) && !game.Bhop)
-      game.Bhop = 1;
-    else if (checkKey(KEY_DOWN) && game.Bhop)
-      game.Bhop = 0;
-
     if (game.Bhop &&
         (game.Player.m_fFlags == 131 || game.Player.m_fFlags == 643))
-      sendInput(KEY_SPACE);
+      sendInput(UinputF, KEY_SPACE);
 
     usleep(100);
   }
