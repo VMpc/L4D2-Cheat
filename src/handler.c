@@ -59,7 +59,7 @@ void handleInput(Game *restrict game, int key) {
 char **splitArguments(char str[]) {
   char **ret = malloc(8);
   char *ptr = strtok(str, " ");
-  int i = 0;
+  int i;
 
   for (i = 0; ptr != NULL; i++) {
     ret[i] = ptr;
