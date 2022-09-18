@@ -16,10 +16,10 @@
 #include <string.h>
 #include <unistd.h>
 
-/* Handles KEYPRESS and KEYRELEASE events */
+/* Read KEYPRESS and KEYRELEASE events from /dev/input/eventX */
 int getInput(int keyFile) {
   struct input_event ie;
-  
+
   if (read(keyFile, &ie, sizeof(ie)) == -1)
     return -1;
 

@@ -9,10 +9,11 @@
 
 #include "game.h"
 
+/* Handle the bhop hotkey */
 void toggleBhop(Game *, char);
-
+/* Handle the glow command */
 void toggleEsp(Game *, char **restrict);
-
+/* Handle the noboom command */
 void toggleNoBoom(Game *, char **restrict);
 
 #endif /* _COMMANDS_H */

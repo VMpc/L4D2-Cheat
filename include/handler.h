@@ -22,10 +22,11 @@ typedef struct {
   togglefunc func;
 } Toggle;
 
+/* Checks & runs a command with the split arguments */
 void executeCommand(Game *restrict, char *restrict);
-
+/* Handle key presses to make hotkeys */
 void handleInput(Game *restrict, int);
-
-char **splitArguments(char[]);
+/* Split stdin into a command + arguments */
+char **splitArguments(char *restrict);
 
 #endif /* _HANDLER_H */

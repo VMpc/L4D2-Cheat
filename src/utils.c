@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* print then exit the program */
 void die(char *str) {
   puts(str);
   exit(1);

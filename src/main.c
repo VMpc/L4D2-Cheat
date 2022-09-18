@@ -5,10 +5,8 @@
  */
 #define _GNU_SOURCE
 
-#include "commands.h"
 #include "handler.h"
 #include "keyboard.h"
-#include "mem.h"
 #include "utils.h"
 
 #include <linux/input.h>
@@ -29,7 +27,6 @@ int main(void) {
     die("You must run this program as root");
 
   openGame(&game, "hl2_linux");
-
   pthread_create(&threadID, NULL, mainThread, NULL);
 
   while (1) {
@@ -46,7 +43,7 @@ static void *mainThread(void *_) {
   int key;
   int keyF;
   int UinputF;
-  
+
   if ((keyF = openKeyboard()) == -1)
     die("Could not open the input device");
 

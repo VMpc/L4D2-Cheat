@@ -42,8 +42,8 @@ void moduleAddr(pid_t pid, char *lib, u_int32_t *start, u_int32_t *end) {
   return;
 }
 
-/* Unsafe (Detectable) write func, write instructions */
-char pokeAddr(pid_t pid, u_int32_t addr, const char *buf, size_t size) {
+/* Unsafe (Detectable, VAC doesn't detect AFAIK) write func, write instructions */
+void ptraceWrite(pid_t pid, u_int32_t addr, const char *buf, size_t size) {
   int i = 0, j = size / sizeof(long);
   pokeData data;
 
@@ -55,16 +55,19 @@ char pokeAddr(pid_t pid, u_int32_t addr, const char *buf, size_t size) {
     ptrace(PTRACE_POKEDATA, pid, addr + i * 4, data.val);
   }
 
-  if ((j = size % sizeof(long)) == 0)
-    return ptrace(PTRACE_DETACH, pid, 0, 0);
+  if ((j = size % sizeof(long)) == 0) {
+    ptrace(PTRACE_DETACH, pid, 0, 0);
+    return;
+  }
 
   memcpy(data.chars, buf, j);
   ptrace(PTRACE_POKEDATA, pid, addr + i * 4, data.val);
 
-  return ptrace(PTRACE_DETACH, pid, 0, 0);
+  ptrace(PTRACE_DETACH, pid, 0, 0);
+  return;
 }
 
-/* Safe read func */
+/* Safe read func (/proc/pid/mem), read values */
 /* @TODO: replace lseek64 */
 char readAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
   int f;

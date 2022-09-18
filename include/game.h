@@ -19,10 +19,9 @@ typedef struct {
 typedef struct {
   char unk210[210]; /* skip the first 210 elements of the struct */
   char *m_target;
-  int m_iMaxHealth;
-  int m_iHealth;
-
-  int m_fFlags;
+  int m_iMaxHealth; /* 224 */
+  int m_iHealth;    /* 228 */
+  int m_fFlags;     /* 232 */
 
   u_int32_t Address; /* The ASLR bypassed address of the LocalPlayer */
 } Player;
@@ -32,6 +31,8 @@ typedef struct {
 
   u_int32_t clientModule;    /* client.so */
   u_int32_t clientModuleEnd; /* client.so end */
+  u_int32_t engineModule;    /* engine.so */
+  u_int32_t engineModuleEnd; /* engine.so end */
 
   Offsets Offsets; /* Game offsets */
   Player Player;   /* The player struct */
@@ -39,10 +40,11 @@ typedef struct {
   char Bhop; /* this should be in it's own "options" struct */
 } Game;
 
+/* Check if the game is running */
 char checkGame(pid_t);
-
+/* Initalizes the cheat */
 void openGame(Game *, char *);
-
+/* Checks if the LocalPlayer exists */
 char playerFound(Game *);
 
 #endif /* _GAME_H */

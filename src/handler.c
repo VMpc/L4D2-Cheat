@@ -13,7 +13,6 @@
 
 #include <linux/input.h>
 
-
 static Command commands[] = {
     {"glow", &toggleEsp},
     {"noboom", &toggleNoBoom},
@@ -37,11 +36,12 @@ void executeCommand(Game *restrict game, char *restrict str) {
       return;
     }
   }
-  
+
   free(args);
   puts("No command found");
 }
 
+/* Handle key presses to make hotkeys */
 void handleInput(Game *restrict game, int key) {
   int i;
 
@@ -56,7 +56,7 @@ void handleInput(Game *restrict game, int key) {
 }
 
 /* Split stdin into a command + arguments */
-char **splitArguments(char str[]) {
+char **splitArguments(char *restrict str) {
   char **ret = malloc(8);
   char *ptr = strtok(str, " ");
   int i;

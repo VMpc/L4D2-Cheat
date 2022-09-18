@@ -9,8 +9,9 @@
 
 #include <sys/types.h>
 
+/* print then exit the program */
 void die(char *);
-
+/* find the PID of a running process */
 pid_t findPid(char *);
 
 #endif /* _UTILS_H */
