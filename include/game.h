@@ -29,7 +29,7 @@ typedef struct {
 typedef struct {
   pid_t pid; /* Game pid */
 
-  __uint32_t ClientModule;   /* client.so */
+  u_int32_t ClientModule;   /* client.so */
   u_int32_t ClientModuleEnd; /* client.so end */
   u_int32_t EngineModule;    /* engine.so */
   u_int32_t EngineModuleEnd; /* engine.so end */
