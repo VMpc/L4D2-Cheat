@@ -3,13 +3,9 @@
  * Licensed under GPL version 3 or later.
  * See LICENSE for copyright information.
  */
-#define _GNU_SOURCE
-
 #include "handler.h"
 #include "keyboard.h"
 #include "utils.h"
-
-#include <linux/input.h>
 
 #include <pthread.h>
 #include <stdio.h>
@@ -59,9 +55,9 @@ static void *mainThread(void *_) {
 
     if (game.Bhop &&
         (game.Player.m_fFlags == 131 || game.Player.m_fFlags == 643))
-      sendInput(UinputF, KEY_SPACE);
+      sendInput(UinputF, 57); /* KEY_SPACE */
 
-    usleep(100);
+    sleep(0);
   }
 
   die("Game not running");

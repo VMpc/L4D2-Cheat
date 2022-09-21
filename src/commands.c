@@ -19,10 +19,10 @@ void toggleEsp(Game *game, char **restrict args) {
   const char *REV = "\x0F\x83\xD1\x01\x00\x00\xFF";
 
   if (strstr(args[1], "on")) {
-    ptraceWrite(game->pid, game->clientModule + game->Offsets.GlowAddr, NOP, 7);
+    ptraceWrite(game->pid, game->ClientModule + game->Offsets.GlowAddr, NOP, 7);
     puts("Turned on esp");
   } else {
-    ptraceWrite(game->pid, game->clientModule + game->Offsets.GlowAddr, REV, 7);
+    ptraceWrite(game->pid, game->ClientModule + game->Offsets.GlowAddr, REV, 7);
     puts("Turned off esp");
   }
 }
@@ -33,10 +33,10 @@ void toggleNoBoom(Game *game, char **restrict args) {
   const char *REV = "\xE8\x46\x2B\xFF\xFF\x89\x1C\x24";
 
   if (strstr(args[1], "on")) {
-    ptraceWrite(game->pid, game->clientModule + game->Offsets.BoomAddr, NOP, 8);
+    ptraceWrite(game->pid, game->ClientModule + game->Offsets.BoomAddr, NOP, 8);
     puts("Turned on no-boom");
   } else {
-    ptraceWrite(game->pid, game->clientModule + game->Offsets.BoomAddr, REV, 8);
+    ptraceWrite(game->pid, game->ClientModule + game->Offsets.BoomAddr, REV, 8);
     puts("Turned off no-boom");
   }
 }

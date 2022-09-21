@@ -10,9 +10,9 @@
 #include <sys/types.h>
 
 typedef struct {
-  u_int32_t PlayerAddr;
-  u_int32_t GlowAddr;
-  u_int32_t BoomAddr;
+  u_int32_t PlayerAddr; /* The static address of the LocalPlayer */
+  u_int32_t GlowAddr;   /* The static address of where to nop for Glow */
+  u_int32_t BoomAddr;   /* The static address of where to nop for Noboom */
 } Offsets;
 
 /* TODO: dump this entire struct (and structs related to it) */
@@ -29,10 +29,10 @@ typedef struct {
 typedef struct {
   pid_t pid; /* Game pid */
 
-  u_int32_t clientModule;    /* client.so */
-  u_int32_t clientModuleEnd; /* client.so end */
-  u_int32_t engineModule;    /* engine.so */
-  u_int32_t engineModuleEnd; /* engine.so end */
+  __uint32_t ClientModule;   /* client.so */
+  u_int32_t ClientModuleEnd; /* client.so end */
+  u_int32_t EngineModule;    /* engine.so */
+  u_int32_t EngineModuleEnd; /* engine.so end */
 
   Offsets Offsets; /* Game offsets */
   Player Player;   /* The player struct */

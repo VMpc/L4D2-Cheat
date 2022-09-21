@@ -9,17 +9,18 @@
 
 #include "game.h"
 
+/* Func definition of a command */
 typedef void (*cmdfunc)(Game *, char **restrict);
 typedef struct {
-  const char *name;
-  cmdfunc func;
+  const char *name; /* Name of a command */
+  cmdfunc func;     /* Func of a command */
 } Command;
 
 typedef void (*togglefunc)(Game *, char);
 typedef struct {
-  int Key;
-  char Value;
-  togglefunc func;
+  int Key;         /* Key that toggles a func */
+  char Value;      /* Bool, what to set the value to (@TODO: Dynamic type) */
+  togglefunc func; /* Function that handles Value */
 } Toggle;
 
 /* Checks & runs a command with the split arguments */

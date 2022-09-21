@@ -28,19 +28,22 @@ void openGame(Game *game, char *name) {
   if ((game->pid = findPid(name)) == -1)
     die("Game not found");
 
-  moduleAddr(game->pid, "/bin/client.so", &game->clientModule,
-             &game->clientModuleEnd);
-  moduleAddr(game->pid, "/bin/engine.so", &game->engineModule,
-             &game->engineModuleEnd);
+  moduleAddr(game->pid, "/bin/client.so", &game->ClientModule,
+             &game->ClientModuleEnd, 1);
+  moduleAddr(game->pid, "/bin/engine.so", &game->EngineModule,
+             &game->EngineModuleEnd, 1);
 
-  if ((game->clientModule + game->clientModuleEnd) == 0)
+  if ((game->ClientModule + game->ClientModuleEnd) == 0)
     die("Could not get the client.so module\n");
-  else if ((game->engineModule + game->clientModuleEnd) == 0)
+  else if ((game->EngineModule + game->ClientModuleEnd) == 0)
     die("Could not get the engine.so module\n");
 
-  printf("Version (%s) of the cheat has loaded\n%s -> PID: %d\nclient.so -> "
-         "(%x-%x)\n",
-         VERSION, name, game->pid, game->clientModule, game->clientModuleEnd);
+  printf("Version (%s) of the cheat has loaded\n"
+         "%s -> PID: %d\n"
+         "client.so -> (%x-%x)\n"
+         "engine.so -> (%x-%x)\n",
+         VERSION, name, game->pid, game->ClientModule, game->ClientModuleEnd,
+         game->EngineModule, game->EngineModuleEnd);
 
   /* @TODO: replace with sigs */
   game->Offsets = (Offsets){
@@ -52,7 +55,7 @@ void openGame(Game *game, char *name) {
 
 /* Checks if the LocalPlayer exists */
 char playerFound(Game *game) {
-  if (readAddr(game->pid, game->clientModule + game->Offsets.PlayerAddr,
+  if (readAddr(game->pid, game->ClientModule + game->Offsets.PlayerAddr,
                &game->Player.Address, sizeof(game->Player.Address)) == -1)
     return -1;
 

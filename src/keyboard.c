@@ -8,13 +8,12 @@
 #include "utils.h"
 
 #include <fcntl.h>
-
-#include <linux/uinput.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#include <linux/uinput.h> /* TODO: remove this */
 
 /* Read KEYPRESS and KEYRELEASE events from /dev/input/eventX */
 int getInput(int keyFile) {

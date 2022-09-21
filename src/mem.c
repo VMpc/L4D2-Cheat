@@ -15,10 +15,11 @@
 #include <sys/ptrace.h>
 #include <sys/wait.h>
 
-/* Grabs a memory range of a module */
-void moduleAddr(pid_t pid, char *lib, u_int32_t *start, u_int32_t *end) {
+/* Scan func (/proc/pid/maps) */
+void moduleAddr(pid_t pid, char *lib, u_int32_t *start, u_int32_t *end,
+                char perms) {
   char fName[FILENAME_MAX];
-  char buf[248], lName[64], rwxp[4];
+  char buf[248], lName[64], rwxp[5];
   FILE *f;
 
   sprintf(fName, "/proc/%d/maps", pid);
@@ -34,7 +35,7 @@ void moduleAddr(pid_t pid, char *lib, u_int32_t *start, u_int32_t *end) {
 
     sscanf(buf, "%lx-%lx %s", (unsigned long *)start, (unsigned long *)end,
            rwxp);
-    if (rwxp[0] == 'r' && rwxp[2] == 'x')
+    if (!perms || (rwxp[0] == 'r' && rwxp[2] == 'x'))
       break;
   }
   fclose(f);
@@ -42,7 +43,7 @@ void moduleAddr(pid_t pid, char *lib, u_int32_t *start, u_int32_t *end) {
   return;
 }
 
-/* Unsafe (Detectable, VAC doesn't detect AFAIK) write func, write instructions */
+/* Write func (ptrace), instructions */
 void ptraceWrite(pid_t pid, u_int32_t addr, const char *buf, size_t size) {
   int i = 0, j = size / sizeof(long);
   pokeData data;
@@ -67,7 +68,7 @@ void ptraceWrite(pid_t pid, u_int32_t addr, const char *buf, size_t size) {
   return;
 }
 
-/* Safe read func (/proc/pid/mem), read values */
+/* Read func (/proc/pid/mem), values */
 /* @TODO: replace lseek64 */
 char readAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
   int f;
@@ -86,7 +87,7 @@ char readAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
   return ret;
 }
 
-/* Scan for a signature through a memory region to get an address */
+/* Scan func (memory range), address */
 u_int32_t ScanAddr(u_int32_t start, u_int32_t end, char *sig, char *mask,
                    size_t size) {
   size_t i;
@@ -108,7 +109,7 @@ u_int32_t ScanAddr(u_int32_t start, u_int32_t end, char *sig, char *mask,
   return -1;
 }
 
-/* Safe write func, write values */
+/* Write func (/proc/pid/mem), values */
 /* @TODO: replace lseek64 */
 char writeAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
   int f, ret;

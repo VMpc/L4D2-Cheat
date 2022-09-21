@@ -11,16 +11,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <linux/input.h>
-
 static Command commands[] = {
     {"glow", &toggleEsp},
     {"noboom", &toggleNoBoom},
 };
 
 static Toggle Toggles[] = {
-    {KEY_UP, 1, &toggleBhop},
-    {KEY_DOWN, 0, &toggleBhop},
+    {103, 1, &toggleBhop}, /* KEY_UP */
+    {108, 0, &toggleBhop}, /* KEY DOWN */
     {0, 0, NULL},
 };
 

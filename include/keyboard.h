@@ -7,8 +7,6 @@
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
-#include "game.h"
-
 /* Read KEYPRESS and KEYRELEASE events from /dev/input/eventX */
 int getInput(int);
 /* Finds a /dev/input device */
