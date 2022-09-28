@@ -6,12 +6,13 @@
 - [Mint (amd64)](https://linuxmint.com/)
 
 ### Features
-- Bhop
+- Bhop (+ Bhop delay to try throwing off anticheats, which is optional)
 - Glow hack
 - Removing boomer effects
 
 ### How to use
 - Commands
+  - bhopdelay <on/off>
   - glow <on/off>
   - noboom <on/off>
 - Bhop

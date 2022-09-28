@@ -15,7 +15,7 @@ ifeq ($(RELEASE),1)
 endif
 
 ifeq ($(DEBUG),1)
-  CFLAGS := -O0 -g
+  CFLAGS := -O0 -g -fsanitize=undefined,address
 else
   CFLAGS := -O3
 endif

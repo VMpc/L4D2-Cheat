@@ -71,19 +71,19 @@ void ptraceWrite(pid_t pid, u_int32_t addr, const char *buf, size_t size) {
 /* Read func (/proc/pid/mem), values */
 /* @TODO: replace lseek64 */
 char readAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
-  int f;
+  int fd;
   int8_t ret;
   char fName[FILENAME_MAX];
 
   sprintf(fName, "/proc/%d/mem", pid);
 
-  if ((f = open(fName, O_RDONLY)) == -1)
+  if ((fd = open(fName, O_RDONLY)) == -1)
     return -1;
 
-  if ((ret = lseek64(f, addr, SEEK_SET)) != -1)
-    ret = read(f, buf, size);
+  if ((ret = lseek64(fd, addr, SEEK_SET)) != -1)
+    ret = read(fd, buf, size);
 
-  close(f);
+  close(fd);
   return ret;
 }
 
@@ -112,17 +112,17 @@ u_int32_t ScanAddr(u_int32_t start, u_int32_t end, char *sig, char *mask,
 /* Write func (/proc/pid/mem), values */
 /* @TODO: replace lseek64 */
 char writeAddr(pid_t pid, u_int32_t addr, void *buf, size_t size) {
-  int f, ret;
+  int fd, ret;
   char fName[FILENAME_MAX];
 
   sprintf(fName, "/proc/%d/mem", pid);
 
-  if ((f = open(fName, O_WRONLY)) == -1)
+  if ((fd = open(fName, O_WRONLY)) == -1)
     return -1;
 
-  if ((ret = lseek64(f, addr, SEEK_SET)) != -1)
-    ret = write(f, buf, size);
+  if ((ret = lseek64(fd, addr, SEEK_SET)) != -1)
+    ret = write(fd, buf, size);
 
-  close(f);
+  close(fd);
   return ret;
 }

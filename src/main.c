@@ -9,10 +9,11 @@
 
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <unistd.h>
 
 static Game game;
-
 static void *mainThread(void *);
 
 int main(void) {
@@ -36,14 +37,15 @@ int main(void) {
 /* Main cheat thread */
 static void *mainThread(void *_) {
   (void)_; /* ignoring extra thread arg */
-  int key;
-  int keyF;
-  int UinputF;
+  int key, keyF, uinputF;
+
+  /* For the randomized bhop delay */
+  srand(time(NULL));
 
   if ((keyF = openKeyboard()) == -1)
     die("Could not open the input device");
 
-  if ((UinputF = openUinputKeyboard()) == -1)
+  if ((uinputF = openUinputKeyboard()) == -1)
     die("Could not open /dev/uinput");
 
   while (checkGame(game.pid) != -1) {
@@ -53,9 +55,13 @@ static void *mainThread(void *_) {
     if (playerFound(&game) == -1)
       continue;
 
-    if (game.Bhop &&
-        (game.Player.m_fFlags == 131 || game.Player.m_fFlags == 643))
-      sendInput(UinputF, 57); /* KEY_SPACE */
+    if ((game.Options.Bhop) &&
+        (game.Player.m_fFlags == 131 || game.Player.m_fFlags == 643)) {
+
+      /* Add some random noise to try throwing off anticheats */
+      if (!game.Options.BhopDelay || rand() % 10 <= 5)
+        sendInput(uinputF, 57); /* KEY_SPACE */
+    }
 
     sleep(0);
   }

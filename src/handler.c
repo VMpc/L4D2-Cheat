@@ -12,13 +12,14 @@
 #include <string.h>
 
 static Command commands[] = {
+    {"bhopdelay", &bhopDelay},
     {"glow", &toggleEsp},
     {"noboom", &toggleNoBoom},
 };
 
 static Toggle Toggles[] = {
     {103, 1, &toggleBhop}, /* KEY_UP */
-    {108, 0, &toggleBhop}, /* KEY DOWN */
+    {108, 0, &toggleBhop}, /* KEY_DOWN */
     {0, 0, NULL},
 };
 

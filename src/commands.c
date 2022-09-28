@@ -8,10 +8,22 @@
 #include "mem.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* Handle the bhop hotkey */
-void toggleBhop(Game *game, char bool) { game->Bhop = bool; }
+void toggleBhop(Game *restrict game, char bool) { game->Options.Bhop = bool; }
+
+/* Handle the bhopdelay command */
+void bhopDelay(Game *restrict game, char **restrict args) {
+  if (strstr(args[1], "on")) {
+    game->Options.BhopDelay = 1;
+    puts("Turned on bhop delay");
+  } else {
+    game->Options.BhopDelay = 0;
+    puts("Turned off bhop delay");
+  }
+}
 
 /* Handle the glow command */
 void toggleEsp(Game *game, char **restrict args) {
