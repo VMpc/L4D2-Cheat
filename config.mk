@@ -1,8 +1,3 @@
-# config.mk
-#
-# Licensed under GPL version 3 or later.
-# See LICENSE for copyright information.
-
 CC ?= cc
 
 TARGET  := L4D2Cheat

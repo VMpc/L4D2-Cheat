@@ -1,8 +1,3 @@
-# Makefile
-#
-# Licensed under GPL version 3 or later.
-# See LICENSE for copyright information.
-
 include config.mk
 
 all: $(TARGET)
