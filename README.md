@@ -53,7 +53,6 @@ Add DIR='/usr/local/sbin' to change the install location. (uninstall must use th
 ## Thanks to
 - [Helped with offsets](https://github.com/StrafeTx)
 - [Moral support / Helped figure out the hellscape of ptrace](https://github.com/StrafeReaver)
-- [A federal agent / Keeps sending me patches to fix/optimize/clean stuff](URLNOTFOUND)
 
 ## License
 L4D2-Cheat is licensed under GPL version 3 or later.

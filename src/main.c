@@ -59,7 +59,7 @@ static void *mainThread(void *_) {
         (game.Player.m_fFlags == 131 || game.Player.m_fFlags == 643)) {
 
       /* Add some random noise to try throwing off anticheats */
-      if (!game.Options.BhopDelay || rand() % 10 <= 5)
+      if (!game.Options.BhopDelay || rand() % 50 <= 10)
         sendInput(uinputF, 57); /* KEY_SPACE */
     }
 
